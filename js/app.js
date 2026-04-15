@@ -28,20 +28,6 @@ const App = {
     components: { TaxTableRenderer },
     template: `
         <div class="app-container">
-            <style>
-                /* 表格表头固定逻辑 */
-                .tax-table-container table thead th,
-                .tax-table-container table tr:first-child th,
-                .tax-table-container table tr:first-child td {
-                    position: sticky !important;
-                    top: 108px !important; /* banner(48px) + actions(60px) */
-                    z-index: 100 !important;
-                    background-color: #f8f9fa !important; /* 必须设置背景色防止重叠透明 */
-                    box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1);
-                }
-                /* 如果有二级表头，需根据实际情况微调 */
-            </style>
-
             <div class="top-banner" style="position: fixed; top: 0; left: 0; width: 100%; background-color: #fff3cd; color: #856404; text-align: center; padding: 12px 0; font-weight: bold; z-index: 2000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-bottom: 1px solid #ffeeba; font-size: 14px; height: 48px; box-sizing: border-box;">
                 💡 本系统属于模拟系统，仅用于学习交流，具体依税务实际征税为准! &nbsp; 加微信进群 13519445134
             </div>
@@ -68,25 +54,31 @@ const App = {
                 </div>
 
                 <div v-else class="workspace">
-                    <div class="sidebar">
-                        <div class="sidebar-header" style="position: sticky; top: 48px; background: #ffffff; z-index: 1500; padding: 15px; border-bottom: 1px solid #eaeaea;">
-                            <button class="btn success-btn" @click="handleExport" :disabled="isExporting" style="width: 100%; margin-bottom: 10px; display: block; box-sizing: border-box;">
+                    <div class="sidebar" style="display: flex; flex-direction: column; height: calc(100vh - 48px); position: sticky; top: 48px; background: #ffffff;">
+                        <div class="sidebar-header" style="padding: 15px; border-bottom: 1px solid #eee; flex-shrink: 0;">
+                            <button class="back-btn" @click="isFilling = false" style="width: 100%; box-sizing: border-box;">← 返回目录</button>
+                        </div>
+                        
+                        <div class="sidebar-menu-list" style="flex: 1; overflow-y: auto; padding: 10px 0;">
+                            <div v-for="item in selectedForms" :key="item.id" 
+                                 class="menu-item" :class="{ active: currentMenu === item.id }" @click="switchTab(item)">
+                                <div style="font-weight:bold;">{{ item.id }}</div>
+                                <div style="font-size:12px;opacity:0.8;line-height:1.4;">{{ item.name }}</div>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-footer" style="padding: 15px; border-top: 1px solid #eee; background: #ffffff; flex-shrink: 0;">
+                            <button class="btn success-btn" @click="handleExport" :disabled="isExporting" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;">
                                 {{ isExporting ? '导出中...' : '📥 导出到 Excel' }}
                             </button>
-                            <button class="btn danger-btn" @click="handleReset" style="width: 100%; margin-bottom: 15px; display: block; box-sizing: border-box;">
+                            <button class="btn danger-btn" @click="handleReset" style="width: 100%; box-sizing: border-box;">
                                 🗑️ 重置填写数据
                             </button>
-                            <button class="back-btn" @click="isFilling = false" style="width: 100%; display: block; box-sizing: border-box;">← 返回目录</button>
-                        </div>
-                        <div v-for="item in selectedForms" :key="item.id" 
-                             class="menu-item" :class="{ active: currentMenu === item.id }" @click="switchTab(item)">
-                            <div style="font-weight:bold;">{{ item.id }}</div>
-                            <div style="font-size:12px;opacity:0.8;line-height:1.4;">{{ item.name }}</div>
                         </div>
                     </div>
                     
-                    <div class="content" style="position: relative;">
-                        <div class="workspace-actions" style="position: sticky; top: 48px; z-index: 1000; background: #ffffff; padding: 0 20px; border-bottom: 2px solid #4a90e2; margin-bottom: 0; box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05); display: flex; align-items: center; height: 60px; box-sizing: border-box;">
+                    <div class="content" style="position: relative; flex: 1;">
+                        <div class="workspace-actions" style="position: sticky; top: 48px; z-index: 1000; background: #ffffff; padding: 0 20px; border-bottom: 2px solid #4a90e2; display: flex; align-items: center; height: 60px; box-sizing: border-box;">
                             <div style="color: #333; font-size: 15px;">
                                 当前填报表单：<strong style="color: #4a90e2; font-size: 16px;">{{ currentMenu }}</strong>
                             </div>
