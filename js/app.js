@@ -4,24 +4,19 @@ import { db, initFormState, injectFormulas, resetDB } from './engine.js'
 import { exportToExcel } from './exporter.js'
 import TaxTableRenderer from '../components/TaxTableRenderer.js'
 
-// 🌟 全量物理号段映射地图
 const formToGroupMap = {
     'A000000': 'group_0000-4000', 'A100000': 'group_0000-4000', 'A101010': 'group_0000-4000', 
     'A101020': 'group_0000-4000', 'A102010': 'group_0000-4000', 'A102020': 'group_0000-4000', 
     'A103000': 'group_0000-4000', 'A104000': 'group_0000-4000',
-
     'A105000': 'group_5000-5070', 'A105010': 'group_5000-5070', 'A105020': 'group_5000-5070', 
     'A105030': 'group_5000-5070', 'A105040': 'group_5000-5070', 'A105050': 'group_5000-5070', 
     'A105060': 'group_5000-5070', 'A105070': 'group_5000-5070',
-
     'A105080': 'group_5080-7012', 'A105090': 'group_5080-7012', 'A105100': 'group_5080-7012', 
     'A105110': 'group_5080-7012', 'A105120': 'group_5080-7012', 'A106000': 'group_5080-7012', 
     'A107011': 'group_5080-7012', 'A107012': 'group_5080-7012',
-
     'A107020': 'group_7020-8020', 'A107030': 'group_7020-8020', 'A107041': 'group_7020-8020', 
     'A107042': 'group_7020-8020', 'A107050': 'group_7020-8020', 'A108000': 'group_7020-8020', 
     'A108010': 'group_7020-8020', 'A108020': 'group_7020-8020',
-
     'A108030': 'group_8030-9010', 'A109000': 'group_8030-9010', 'A109010': 'group_8030-9010'
 }
 
@@ -63,7 +58,7 @@ const App = {
             <div class="content">
                 <div class="workspace-actions">
                     <button class="btn success-btn" @click="handleExport" :disabled="isExporting">
-                        {{ isExporting ? '导出中...' : '导出到Excel' }}
+                        {{ isExporting ? '导出中...' : '导出到 Excel (分 Sheet)' }}
                     </button>
                     <button class="btn danger-btn" @click="handleReset">重置填写数据</button>
                 </div>
@@ -128,16 +123,18 @@ const App = {
 
         // 重置数据
         const handleReset = () => {
-            if (confirm('确认要清空所有已填报的数据吗？清空后不可恢复。')) {
+            if (confirm('确认要清空所有已填报的数据吗？该操作不可撤销。')) {
                 resetDB()
             }
         }
 
-        // 导出 Excel
+        // 导出 Excel (触发新的多 Sheet 逻辑)
         const handleExport = async () => {
             isExporting.value = true
             try {
                 await exportToExcel(selectedIds.value, formToGroupMap, db)
+            } catch (err) {
+                alert('导出失败，请检查控制台错误信息。')
             } finally {
                 isExporting.value = false
             }
