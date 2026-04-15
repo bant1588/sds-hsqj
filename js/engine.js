@@ -1,13 +1,26 @@
 // js/engine.js
-import { reactive, computed } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+import { reactive, watchEffect } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
 
-export const db = reactive({
-    // 必须在这里给每张表声明一个空对象，页面上的 v-model 才能存进去
-    A000000: {}, A100000: {}, A101010: {}, A101020: {}, A102010: {}, A102020: {},
-    A103000: {}, A104000: {}, A105000: {}, A105010: {}, A105020: {}, A105030: {},
-    A105040: {}, A105050: {}, A105060: {}, A105070: {}
-})
+// 1. 全局数据总线
+export const db = reactive({})
 
-export const formulas = reactive({
-    // 这里的公式以后可以根据实际需求慢慢加
-})
+// 2. 智能初始化槽位工具
+export const initFormState = (formId, fields) => {
+    if (!db[formId]) {
+        db[formId] = {}
+    }
+    // fields 结构变为：[{ key: 'L1', type: 'number' }, { key: 'L1_name', type: 'text' }]
+    fields.forEach(field => { 
+        if (field.key && db[formId][field.key] === undefined) {
+            // 如果明确指定是 text 文本，初始化为空字符串；否则初始化为 0
+            db[formId][field.key] = field.type === 'text' ? '' : 0 
+        }
+    })
+}
+
+// 3. 逻辑注入器：将各张表的公式动态挂载到引擎中
+export const injectFormulas = (logicFunction) => {
+    watchEffect(() => {
+        logicFunction(db)
+    })
+}
