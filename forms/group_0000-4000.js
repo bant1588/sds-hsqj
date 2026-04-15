@@ -2,6 +2,61 @@
 
 export const formBundle = {
     // ==========================================
+    // A000000 企业所得税年度纳税申报基础信息表
+    // ==========================================
+    A000000: {
+        schema: {
+            id: 'A000000',
+            title: '企业所得税年度纳税申报基础信息表 (A000000)',
+            columns: [
+                { title: '项目代码/序号', width: '15%', align: 'center' },
+                { title: '项 目 名 称', width: '55%', align: 'left' },
+                { title: '填 报 内 容', width: '30%', align: 'center' }
+            ],
+            rows: [
+                { line: '101', text: '纳税申报企业类型 (填写代码)', key: 'L101' },
+                { line: '102', text: '分支机构就地纳税比例 (%)', key: 'L102' },
+                { line: '103', text: '资产总额 (填写平均值，单位：万元)', key: 'L103' },
+                { line: '104', text: '从业人数 (填写平均值，单位：人)', key: 'L104' },
+                { line: '105', text: '所属国民经济行业 (填写代码)', key: 'L105' },
+                { line: '106', text: '从事国家限制或禁止行业 (□是 □否)', key: 'L106' },
+                { line: '107', text: '适用会计准则或会计制度 (填写代码)', key: 'L107' },
+                { line: '108', text: '采用一般企业财务报表格式 (2019年版) (□是 □否)', key: 'L108' },
+                { line: '109', text: '小型微利企业 (□是 □否)', key: 'L109' },
+                { line: '110', text: '上市公司 (□是(境内/境外) □否)', key: 'L110' },
+                { line: '201', text: '从事股权投资业务 (□是)', key: 'L201' },
+                { line: '202', text: '存在境外关联交易 (□是)', key: 'L202' },
+                { line: '203-1', text: '选择采用的境外所得抵免方式', key: 'L203_1' },
+                { line: '203-2', text: '新增境外直接投资信息 (□是)', key: 'L203_2' },
+                { line: '204', text: '有限合伙制创业投资企业的法人合伙人 (□是)', key: 'L204' },
+                { line: '205', text: '创业投资企业 (□是)', key: 'L205' },
+                { line: '206', text: '技术先进型服务企业类型 (填写代码)', key: 'L206' },
+                { line: '207', text: '非营利组织 (□是)', key: 'L207' },
+                { line: '208', text: '软件、集成电路企业类型 (填写代码)', key: 'L208' },
+                { line: '209', text: '集成电路生产项目类型', key: 'L209' },
+                { line: '210-1', text: '科技型中小企业入库编号1', key: 'L210_1' },
+                { line: '210-2', text: '入库时间1', key: 'L210_2' },
+                { line: '211-1', text: '高新技术企业证书编号1', key: 'L211_1' },
+                { line: '211-2', text: '发证时间1', key: 'L211_2' },
+                { line: '212', text: '重组事项税务处理方式 (□一般性 □特殊性)', key: 'L212' },
+                { line: '213', text: '重组交易类型 (填写代码)', key: 'L213' },
+                { line: '214', text: '重组当事方类型 (填写代码)', key: 'L214' },
+                { line: '215', text: '政策性搬迁开始时间 (年 月)', key: 'L215' },
+                { line: '216', text: '发生政策性搬迁且停止生产经营无所得年度 (□是)', key: 'L216' },
+                { line: '217', text: '政策性搬迁损失分期扣除年度 (□是)', key: 'L217' },
+                { line: '218', text: '发生非货币性资产对外投资递延纳税事项 (□是)', key: 'L218' },
+                { line: '219', text: '非货币性资产对外投资转让所得递延纳税年度 (□是)', key: 'L219' },
+                { line: '220', text: '发生技术成果投资入股递延纳税事项 (□是)', key: 'L220' },
+                { line: '221', text: '技术成果投资入股递延纳税年度 (□是)', key: 'L221' },
+                { line: '222', text: '发生资产 (股权) 划转特殊性税务处理事项 (□是)', key: 'L222' },
+                { line: '223', text: '债务重组所得递延纳税年度 (□是)', key: 'L223' },
+                { line: '224', text: '研发支出辅助账样式 (□2015版 □2021版 □自行设计)', key: 'L224' }
+            ]
+        },
+        logic: (db) => {}
+    },
+
+    // ==========================================
     // A100000 企业所得税年度纳税申报主表
     // ==========================================
     A100000: {
@@ -52,14 +107,14 @@ export const formBundle = {
         logic: (db) => {
             if (!db.A100000) return;
             const t = db.A100000;
-            // 跨表抓取核心数据
-            t.L1 = (db.A101010?.L1 || 0) + (db.A101020?.L1 || 0) + (db.A103000?.L1 || 0);
-            t.L2 = (db.A102010?.L1 || 0) + (db.A102020?.L1 || 0) + (db.A103000?.L18 || 0);
+            // 跨表抓取核心数据 (更新为囊括扩充后的子表逻辑)
+            t.L1 = (db.A101010?.L1 || 0) + (db.A101020?.L1 || 0) + ((db.A103000?.L1 || 0) + (db.A103000?.L10 || 0));
+            t.L2 = (db.A102010?.L1 || 0) + (db.A102020?.L1 || 0) + ((db.A103000?.L18 || 0) + (db.A103000?.L24 || 0));
             t.L4 = db.A104000?.L26_C1 || 0;
             t.L5 = db.A104000?.L26_C3 || 0;
             t.L7 = db.A104000?.L26_C5 || 0;
-            t.L16 = (db.A101010?.L16 || 0) + (db.A101020?.L35 || 0) + (db.A103000?.L10 || 0);
-            t.L17 = (db.A102010?.L16 || 0) + (db.A102020?.L33 || 0) + (db.A103000?.L24 || 0);
+            t.L16 = (db.A101010?.L16 || 0) + (db.A101020?.L35 || 0);
+            t.L17 = (db.A102010?.L16 || 0) + (db.A102020?.L33 || 0);
             
             // 表内利润计算
             t.L15 = t.L1 - t.L2 - (t.L3 || 0) - t.L4 - t.L5 - (t.L6 || 0) - t.L7 + (t.L8 || 0) + (t.L9 || 0) + (t.L10 || 0) + (t.L11 || 0) + (t.L12 || 0) + (t.L13 || 0) + (t.L14 || 0);
@@ -167,7 +222,188 @@ export const formBundle = {
     },
 
     // ==========================================
-    // A104000 期间费用明细表 (复杂多列表格)
+    // A101020 金融企业收入明细表 (完整结构)
+    // ==========================================
+    A101020: {
+        schema: {
+            id: 'A101020',
+            title: '金融企业收入明细表 (A101020)',
+            columns: [{title:'行次', width:'10%'}, {title:'项 目', width:'60%'}, {title:'金 额', width:'30%'}],
+            rows: [
+                { line: '1', text: '一、营业收入 (2+18+27+32+33+34)', key: 'L1', isBold: true, isReadonly: true },
+                { line: '2', text: '（一）银行业务收入 (3+10)', key: 'L2', indent: 1, isReadonly: true },
+                { line: '3', text: '1. 利息收入 (4+5+6+7+8+9)', key: 'L3', indent: 2, isReadonly: true },
+                { line: '4', text: '（1）存放同业', key: 'L4', indent: 3 },
+                { line: '5', text: '（2）存放中央银行', key: 'L5', indent: 3 },
+                { line: '6', text: '（3）拆出资金', key: 'L6', indent: 3 },
+                { line: '7', text: '（4）发放贷款及垫资', key: 'L7', indent: 3 },
+                { line: '8', text: '（5）买入返售金融资产', key: 'L8', indent: 3 },
+                { line: '9', text: '（6）其他', key: 'L9', indent: 3 },
+                { line: '10', text: '2. 手续费及佣金收入 (11+12+13+14+15+16+17)', key: 'L10', indent: 2, isReadonly: true },
+                { line: '11', text: '（1）结算与清算手续费', key: 'L11', indent: 3 },
+                { line: '12', text: '（2）代理业务手续费', key: 'L12', indent: 3 },
+                { line: '13', text: '（3）信用承诺手续费及佣金', key: 'L13', indent: 3 },
+                { line: '14', text: '（4）银行卡手续费', key: 'L14', indent: 3 },
+                { line: '15', text: '（5）顾问和咨询费', key: 'L15', indent: 3 },
+                { line: '16', text: '（6）托管及其他受托业务佣金', key: 'L16', indent: 3 },
+                { line: '17', text: '（7）其他', key: 'L17', indent: 3 },
+                { line: '18', text: '（二）证券业务收入 (19+26)', key: 'L18', indent: 1, isReadonly: true },
+                { line: '19', text: '1. 证券业务手续费及佣金收入 (20+21+22+23+24+25)', key: 'L19', indent: 2, isReadonly: true },
+                { line: '20', text: '（1）证券承销业务', key: 'L20', indent: 3 },
+                { line: '21', text: '（2）证券经纪业务', key: 'L21', indent: 3 },
+                { line: '22', text: '（3）受托客户资产管理业务', key: 'L22', indent: 3 },
+                { line: '23', text: '（4）代理兑付证券', key: 'L23', indent: 3 },
+                { line: '24', text: '（5）代理保管证券', key: 'L24', indent: 3 },
+                { line: '25', text: '（6）其他', key: 'L25', indent: 3 },
+                { line: '26', text: '2. 其他证券业务收入', key: 'L26', indent: 2 },
+                { line: '27', text: '（三）已赚保费 (28-30-31)', key: 'L27', indent: 1, isReadonly: true },
+                { line: '28', text: '1. 保险业务收入', key: 'L28', indent: 2 },
+                { line: '29', text: '其中：分保费收入', key: 'L29', indent: 3 },
+                { line: '30', text: '2. 分出保费', key: 'L30', indent: 2 },
+                { line: '31', text: '3. 提取未到期责任准备金', key: 'L31', indent: 2 },
+                { line: '32', text: '（四）其他金融业务收入', key: 'L32', indent: 1 },
+                { line: '33', text: '（五）汇兑收益 (损失以“-”号填列)', key: 'L33', indent: 1 },
+                { line: '34', text: '（六）其他业务收入', key: 'L34', indent: 1 },
+                { line: '35', text: '二、营业外收入 (36+37+38+39+40+41+42)', key: 'L35', isBold: true, isReadonly: true },
+                { line: '36', text: '（一）非流动资产处置利得', key: 'L36', indent: 1 },
+                { line: '37', text: '（二）非货币性资产交换利得', key: 'L37', indent: 1 },
+                { line: '38', text: '（三）债务重组利得', key: 'L38', indent: 1 },
+                { line: '39', text: '（四）政府补助利得', key: 'L39', indent: 1 },
+                { line: '40', text: '（五）盘盈利得', key: 'L40', indent: 1 },
+                { line: '41', text: '（六）捐赠利得', key: 'L41', indent: 1 },
+                { line: '42', text: '（七）其他', key: 'L42', indent: 1 }
+            ]
+        },
+        logic: (db) => {
+            if (!db.A101020) return;
+            const t = db.A101020;
+            t.L3 = (t.L4 || 0) + (t.L5 || 0) + (t.L6 || 0) + (t.L7 || 0) + (t.L8 || 0) + (t.L9 || 0);
+            t.L10 = (t.L11 || 0) + (t.L12 || 0) + (t.L13 || 0) + (t.L14 || 0) + (t.L15 || 0) + (t.L16 || 0) + (t.L17 || 0);
+            t.L2 = t.L3 + t.L10;
+            t.L19 = (t.L20 || 0) + (t.L21 || 0) + (t.L22 || 0) + (t.L23 || 0) + (t.L24 || 0) + (t.L25 || 0);
+            t.L18 = t.L19 + (t.L26 || 0);
+            t.L27 = (t.L28 || 0) - (t.L30 || 0) - (t.L31 || 0);
+            t.L1 = t.L2 + t.L18 + t.L27 + (t.L32 || 0) + (t.L33 || 0) + (t.L34 || 0);
+            t.L35 = (t.L36 || 0) + (t.L37 || 0) + (t.L38 || 0) + (t.L39 || 0) + (t.L40 || 0) + (t.L41 || 0) + (t.L42 || 0);
+        }
+    },
+
+    // ==========================================
+    // A102020 金融企业支出明细表 (完整结构)
+    // ==========================================
+    A102020: {
+        schema: {
+            id: 'A102020',
+            title: '金融企业支出明细表 (A102020)',
+            columns: [{title:'行次', width:'10%'}, {title:'项 目', width:'60%'}, {title:'金 额', width:'30%'}],
+            rows: [
+                { line: '1', text: '一、营业支出 (2+15+25+31+32)', key: 'L1', isBold: true, isReadonly: true },
+                { line: '2', text: '（一）银行业务支出 (3+11)', key: 'L2', indent: 1, isReadonly: true },
+                { line: '3', text: '1. 银行利息支出 (4+5+6+7+8+9+10)', key: 'L3', indent: 2, isReadonly: true },
+                { line: '4', text: '（1）同业存放', key: 'L4', indent: 3 },
+                { line: '5', text: '（2）向中央银行借款', key: 'L5', indent: 3 },
+                { line: '6', text: '（3）拆入资金', key: 'L6', indent: 3 },
+                { line: '7', text: '（4）吸收存款', key: 'L7', indent: 3 },
+                { line: '8', text: '（5）卖出回购金融资产', key: 'L8', indent: 3 },
+                { line: '9', text: '（6）发行债券', key: 'L9', indent: 3 },
+                { line: '10', text: '（7）其他', key: 'L10', indent: 3 },
+                { line: '11', text: '2. 银行手续费及佣金支出 (12+13+14)', key: 'L11', indent: 2, isReadonly: true },
+                { line: '12', text: '（1）手续费支出', key: 'L12', indent: 3 },
+                { line: '13', text: '（2）佣金支出', key: 'L13', indent: 3 },
+                { line: '14', text: '（3）其他', key: 'L14', indent: 3 },
+                { line: '15', text: '（二）保险业务支出 (16+17-18+19-20+21+22-23+24)', key: 'L15', indent: 1, isReadonly: true },
+                { line: '16', text: '1. 退保金', key: 'L16', indent: 2 },
+                { line: '17', text: '2. 赔付支出', key: 'L17', indent: 2 },
+                { line: '18', text: '减：摊回赔付支出', key: 'L18', indent: 3 },
+                { line: '19', text: '3. 提取保险责任准备金', key: 'L19', indent: 2 },
+                { line: '20', text: '减：摊回保险责任准备金', key: 'L20', indent: 3 },
+                { line: '21', text: '4. 保单红利支出', key: 'L21', indent: 2 },
+                { line: '22', text: '5. 分保费用', key: 'L22', indent: 2 },
+                { line: '23', text: '减：摊回分保费用', key: 'L23', indent: 3 },
+                { line: '24', text: '6. 保险业务手续费及佣金支出', key: 'L24', indent: 2 },
+                { line: '25', text: '（三）证券业务支出 (26+30)', key: 'L25', indent: 1, isReadonly: true },
+                { line: '26', text: '1. 证券业务手续费及佣金支出 (27+28+29)', key: 'L26', indent: 2, isReadonly: true },
+                { line: '27', text: '（1）证券经纪业务手续费支出', key: 'L27', indent: 3 },
+                { line: '28', text: '（2）佣金支出', key: 'L28', indent: 3 },
+                { line: '29', text: '（3）其他', key: 'L29', indent: 3 },
+                { line: '30', text: '2. 其他证券业务支出', key: 'L30', indent: 2 },
+                { line: '31', text: '（四）其他金融业务支出', key: 'L31', indent: 1 },
+                { line: '32', text: '（五）其他业务成本', key: 'L32', indent: 1 },
+                { line: '33', text: '二、营业外支出 (34+35+36+37+38+39)', key: 'L33', isBold: true, isReadonly: true },
+                { line: '34', text: '（一）非流动资产处置损失', key: 'L34', indent: 1 },
+                { line: '35', text: '（二）非货币性资产交换损失', key: 'L35', indent: 1 },
+                { line: '36', text: '（三）债务重组损失', key: 'L36', indent: 1 },
+                { line: '37', text: '（四）捐赠支出', key: 'L37', indent: 1 },
+                { line: '38', text: '（五）非常损失', key: 'L38', indent: 1 },
+                { line: '39', text: '（六）其他', key: 'L39', indent: 1 }
+            ]
+        },
+        logic: (db) => {
+            if (!db.A102020) return;
+            const t = db.A102020;
+            t.L3 = (t.L4 || 0) + (t.L5 || 0) + (t.L6 || 0) + (t.L7 || 0) + (t.L8 || 0) + (t.L9 || 0) + (t.L10 || 0);
+            t.L11 = (t.L12 || 0) + (t.L13 || 0) + (t.L14 || 0);
+            t.L2 = t.L3 + t.L11;
+            t.L15 = (t.L16 || 0) + (t.L17 || 0) - (t.L18 || 0) + (t.L19 || 0) - (t.L20 || 0) + (t.L21 || 0) + (t.L22 || 0) - (t.L23 || 0) + (t.L24 || 0);
+            t.L26 = (t.L27 || 0) + (t.L28 || 0) + (t.L29 || 0);
+            t.L25 = t.L26 + (t.L30 || 0);
+            t.L1 = t.L2 + t.L15 + t.L25 + (t.L31 || 0) + (t.L32 || 0);
+            t.L33 = (t.L34 || 0) + (t.L35 || 0) + (t.L36 || 0) + (t.L37 || 0) + (t.L38 || 0) + (t.L39 || 0);
+        }
+    },
+
+    // ==========================================
+    // A103000 事业单位、民间非营利组织明细表 (完整结构)
+    // ==========================================
+    A103000: {
+        schema: {
+            id: 'A103000',
+            title: '事业单位、民间非营利组织收入、支出明细表 (A103000)',
+            columns: [{title:'行次', width:'10%'}, {title:'项 目', width:'60%'}, {title:'金 额', width:'30%'}],
+            rows: [
+                { line: '1', text: '一、事业单位收入 (2+3+4+5+6+7)', key: 'L1', isBold: true, isReadonly: true },
+                { line: '2', text: '（一）财政补助收入', key: 'L2', indent: 1 },
+                { line: '3', text: '（二）事业收入', key: 'L3', indent: 1 },
+                { line: '4', text: '（三）上级补助收入', key: 'L4', indent: 1 },
+                { line: '5', text: '（四）附属单位上缴收入', key: 'L5', indent: 1 },
+                { line: '6', text: '（五）经营收入', key: 'L6', indent: 1 },
+                { line: '7', text: '（六）其他收入 (8+9)', key: 'L7', indent: 1, isReadonly: true },
+                { line: '8', text: '其中：投资收益', key: 'L8', indent: 2 },
+                { line: '9', text: '其他', key: 'L9', indent: 2 },
+                { line: '10', text: '二、民间非营利组织收入 (11+12+13+14+15+16+17)', key: 'L10', isBold: true, isReadonly: true },
+                { line: '11', text: '（一）接受捐赠收入', key: 'L11', indent: 1 },
+                { line: '12', text: '（二）会费收入', key: 'L12', indent: 1 },
+                { line: '13', text: '（三）提供服务收入', key: 'L13', indent: 1 },
+                { line: '14', text: '（四）商品销售收入', key: 'L14', indent: 1 },
+                { line: '15', text: '（五）政府补助收入', key: 'L15', indent: 1 },
+                { line: '16', text: '（六）投资收益', key: 'L16', indent: 1 },
+                { line: '17', text: '（七）其他收入', key: 'L17', indent: 1 },
+                { line: '18', text: '三、事业单位支出 (19+20+21+22+23)', key: 'L18', isBold: true, isReadonly: true },
+                { line: '19', text: '（一）事业支出', key: 'L19', indent: 1 },
+                { line: '20', text: '（二）上缴上级支出', key: 'L20', indent: 1 },
+                { line: '21', text: '（三）对附属单位补助支出', key: 'L21', indent: 1 },
+                { line: '22', text: '（四）经营支出', key: 'L22', indent: 1 },
+                { line: '23', text: '（五）其他支出', key: 'L23', indent: 1 },
+                { line: '24', text: '四、民间非营利组织支出 (25+26+27+28)', key: 'L24', isBold: true, isReadonly: true },
+                { line: '25', text: '（一）业务活动成本', key: 'L25', indent: 1 },
+                { line: '26', text: '（二）管理费用', key: 'L26', indent: 1 },
+                { line: '27', text: '（三）筹资费用', key: 'L27', indent: 1 },
+                { line: '28', text: '（四）其他费用', key: 'L28', indent: 1 }
+            ]
+        },
+        logic: (db) => {
+            if (!db.A103000) return;
+            const t = db.A103000;
+            t.L7 = (t.L8 || 0) + (t.L9 || 0);
+            t.L1 = (t.L2 || 0) + (t.L3 || 0) + (t.L4 || 0) + (t.L5 || 0) + (t.L6 || 0) + t.L7;
+            t.L10 = (t.L11 || 0) + (t.L12 || 0) + (t.L13 || 0) + (t.L14 || 0) + (t.L15 || 0) + (t.L16 || 0) + (t.L17 || 0);
+            t.L18 = (t.L19 || 0) + (t.L20 || 0) + (t.L21 || 0) + (t.L22 || 0) + (t.L23 || 0);
+            t.L24 = (t.L25 || 0) + (t.L26 || 0) + (t.L27 || 0) + (t.L28 || 0);
+        }
+    },
+
+    // ==========================================
+    // A104000 期间费用明细表
     // ==========================================
     A104000: {
         schema: {
@@ -183,7 +419,6 @@ export const formBundle = {
                 { title: '财务费用', width: '12%', align: 'center' },
                 { title: '其中:境外支付', width: '12%', align: 'center' }
             ],
-            // 严格按照原图片填制，包含大量的“*”占位符
             rows: [
                 { line: '1', text: '一、职工薪酬', inputs: [{key:'L1_C1'}, {isAsterisk:true}, {key:'L1_C3'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
                 { line: '2', text: '二、劳务费', inputs: [{key:'L2_C1'}, {key:'L2_C2'}, {key:'L2_C3'}, {key:'L2_C4'}, {isAsterisk:true}, {isAsterisk:true}] },
@@ -231,77 +466,5 @@ export const formBundle = {
             t.L26_C5 = sumCol(5);
             t.L26_C6 = sumCol(6);
         }
-    },
-
-    // ==========================================
-    // A101020 金融企业收入明细表 (精简结构)
-    // ==========================================
-    A101020: {
-        schema: {
-            id: 'A101020',
-            title: '金融企业收入明细表 (A101020)',
-            columns: [{title:'行次', width:'10%'}, {title:'项 目', width:'60%'}, {title:'金 额', width:'30%'}],
-            rows: [
-                { line: '1', text: '一、营业收入 (2+18+27+32+33+34)', key: 'L1', isBold: true, isReadonly: true },
-                { line: '2', text: '（一）银行业务收入 (3+10)', key: 'L2', indent: 1, isReadonly: true },
-                { line: '3', text: '1. 利息收入', key: 'L3', indent: 2 },
-                { line: '10', text: '2. 手续费及佣金收入', key: 'L10', indent: 2 },
-                { line: '18', text: '（二）证券业务收入', key: 'L18', indent: 1 },
-                { line: '27', text: '（三）已赚保费', key: 'L27', indent: 1 },
-                { line: '32', text: '（四）其他金融业务收入', key: 'L32', indent: 1 },
-                { line: '33', text: '（五）汇兑收益', key: 'L33', indent: 1 },
-                { line: '34', text: '（六）其他业务收入', key: 'L34', indent: 1 },
-                { line: '35', text: '二、营业外收入', key: 'L35', isBold: true }
-            ]
-        },
-        logic: (db) => {
-            if (db.A101020) {
-                db.A101020.L2 = (db.A101020.L3 || 0) + (db.A101020.L10 || 0);
-                db.A101020.L1 = db.A101020.L2 + (db.A101020.L18 || 0) + (db.A101020.L27 || 0) + (db.A101020.L32 || 0) + (db.A101020.L33 || 0) + (db.A101020.L34 || 0);
-            }
-        }
-    },
-
-    // ==========================================
-    // A102020 金融企业支出明细表 (精简结构)
-    // ==========================================
-    A102020: {
-        schema: {
-            id: 'A102020',
-            title: '金融企业支出明细表 (A102020)',
-            columns: [{title:'行次', width:'10%'}, {title:'项 目', width:'60%'}, {title:'金 额', width:'30%'}],
-            rows: [
-                { line: '1', text: '一、营业支出 (2+15+25+31+32)', key: 'L1', isBold: true, isReadonly: true },
-                { line: '2', text: '（一）银行业务支出', key: 'L2', indent: 1 },
-                { line: '15', text: '（二）保险业务支出', key: 'L15', indent: 1 },
-                { line: '25', text: '（三）证券业务支出', key: 'L25', indent: 1 },
-                { line: '31', text: '（四）其他金融业务支出', key: 'L31', indent: 1 },
-                { line: '32', text: '（五）其他业务成本', key: 'L32', indent: 1 },
-                { line: '33', text: '二、营业外支出', key: 'L33', isBold: true }
-            ]
-        },
-        logic: (db) => {
-            if (db.A102020) {
-                db.A102020.L1 = (db.A102020.L2 || 0) + (db.A102020.L15 || 0) + (db.A102020.L25 || 0) + (db.A102020.L31 || 0) + (db.A102020.L32 || 0);
-            }
-        }
-    },
-
-    // ==========================================
-    // A103000 事业单位收支明细表 (精简结构)
-    // ==========================================
-    A103000: {
-        schema: {
-            id: 'A103000',
-            title: '事业单位、民间非营利组织收入、支出明细表 (A103000)',
-            columns: [{title:'行次', width:'10%'}, {title:'项 目', width:'60%'}, {title:'金 额', width:'30%'}],
-            rows: [
-                { line: '1', text: '一、事业单位收入', key: 'L1', isBold: true },
-                { line: '10', text: '二、民间非营利组织收入', key: 'L10', isBold: true },
-                { line: '18', text: '三、事业单位支出', key: 'L18', isBold: true },
-                { line: '24', text: '四、民间非营利组织支出', key: 'L24', isBold: true }
-            ]
-        },
-        logic: (db) => { }
     }
 };
