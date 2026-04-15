@@ -31,21 +31,30 @@ body {
 
 .directory-header h2 { margin: 0; color: #333; }
 
-.start-btn {
-    background: #1890ff;
-    color: white;
-    border: none;
-    padding: 12px 24px;
+/* 按钮通用样式 */
+.btn {
+    padding: 10px 20px;
     border-radius: 4px;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 15px;
     cursor: pointer;
-    box-shadow: 0 2px 0 rgba(0,0,0,0.045);
+    border: none;
     transition: all 0.3s;
+    font-weight: bold;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.045);
 }
 
-.start-btn:hover { background: #40a9ff; }
-.start-btn:disabled { background: #d9d9d9; cursor: not-allowed; box-shadow: none; }
+.action-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.default-btn { background: #fff; color: #333; border: 1px solid #d9d9d9; box-shadow: none; }
+.default-btn:hover { color: #1890ff; border-color: #1890ff; background: #f0f8ff; }
+
+.primary-btn { background: #1890ff; color: white; }
+.primary-btn:hover { background: #40a9ff; }
+.primary-btn:disabled { background: #d9d9d9; cursor: not-allowed; box-shadow: none; color: #999; }
 
 .directory-list {
     display: flex;
@@ -121,6 +130,19 @@ body {
     padding: 24px;
     overflow-y: auto;
 }
+
+/* 顶部操作区 */
+.workspace-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.success-btn { background: #52c41a; color: white; }
+.success-btn:hover { background: #73d13d; }
+.danger-btn { background: #ff4d4f; color: white; }
+.danger-btn:hover { background: #ff7875; }
 
 .form-card {
     background: #fff;
