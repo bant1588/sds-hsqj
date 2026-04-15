@@ -1,5 +1,8 @@
 // forms/group_0000-4000.js
 
+// 用于记录A100000主表默认计算结果的缓存，实现“默认公式计算也可以手动填写”
+let cache_A100 = { L1: 0, L2: 0, L4: 0, L5: 0, L7: 0 };
+
 export const formBundle = {
     // ==========================================
     // A000000 企业所得税年度纳税申报基础信息表
@@ -102,13 +105,13 @@ export const formBundle = {
                 { title: '金 额', width: '20%', align: 'center' }
             ],
             rows: [
-                { line: '1', text: '一、营业收入 (填写A101010/101020/103000)', key: 'L1', isReadonly: true },
-                { line: '2', text: '减：营业成本 (填写A102010/102020/103000)', key: 'L2', indent: 1, isReadonly: true },
+                { line: '1', text: '一、营业收入 (填写A101010/101020/103000)', key: 'L1' },
+                { line: '2', text: '减：营业成本 (填写A102010/102020/103000)', key: 'L2', indent: 1 },
                 { line: '3', text: '减：税金及附加', key: 'L3', indent: 1 },
-                { line: '4', text: '减：销售费用 (填写A104000)', key: 'L4', indent: 1, isReadonly: true },
-                { line: '5', text: '减：管理费用 (填写A104000)', key: 'L5', indent: 1, isReadonly: true },
+                { line: '4', text: '减：销售费用 (填写A104000)', key: 'L4', indent: 1 },
+                { line: '5', text: '减：管理费用 (填写A104000)', key: 'L5', indent: 1 },
                 { line: '6', text: '减：研发费用 (填写A104000)', key: 'L6', indent: 1 },
-                { line: '7', text: '减：财务费用 (填写A104000)', key: 'L7', indent: 1, isReadonly: true },
+                { line: '7', text: '减：财务费用 (填写A104000)', key: 'L7', indent: 1 },
                 { line: '8', text: '加：其他收益', key: 'L8', indent: 1 },
                 { line: '9', text: '加：投资收益 (损失以“-”号填列)', key: 'L9', indent: 1 },
                 { line: '10', text: '加：净敞口套期收益 (损失以“-”号填列)', key: 'L10', indent: 1 },
@@ -157,12 +160,28 @@ export const formBundle = {
             if (!db.A100000) return;
             const t = db.A100000;
             
-            // 抓取基础与子表数据
-            t.L1 = (db.A101010?.L1 || 0) + (db.A101020?.L1 || 0) + ((db.A103000?.L1 || 0) + (db.A103000?.L10 || 0));
-            t.L2 = (db.A102010?.L1 || 0) + (db.A102020?.L1 || 0) + ((db.A103000?.L18 || 0) + (db.A103000?.L24 || 0));
-            t.L4 = db.A104000?.L26_C1 || 0;
-            t.L5 = db.A104000?.L26_C3 || 0;
-            t.L7 = db.A104000?.L26_C5 || 0;
+            // 抓取基础与子表数据，生成默认公式计算结果
+            const calcL1 = (db.A101010?.L1 || 0) + (db.A101020?.L1 || 0) + ((db.A103000?.L1 || 0) + (db.A103000?.L10 || 0));
+            const calcL2 = (db.A102010?.L1 || 0) + (db.A102020?.L1 || 0) + ((db.A103000?.L18 || 0) + (db.A103000?.L24 || 0));
+            const calcL4 = db.A104000?.L26_C1 || 0;
+            const calcL5 = db.A104000?.L26_C3 || 0;
+            const calcL7 = db.A104000?.L26_C5 || 0;
+
+            // 智能赋值：如果输入框的值等于上一次算出的结果，或者是初始的0/空（说明用户没有手动改过或已清空还原），则应用公式；
+            // 否则保留用户手动输入的值，切断自动覆盖
+            if (t.L1 === cache_A100.L1 || t.L1 === 0 || t.L1 === '') t.L1 = calcL1;
+            if (t.L2 === cache_A100.L2 || t.L2 === 0 || t.L2 === '') t.L2 = calcL2;
+            if (t.L4 === cache_A100.L4 || t.L4 === 0 || t.L4 === '') t.L4 = calcL4;
+            if (t.L5 === cache_A100.L5 || t.L5 === 0 || t.L5 === '') t.L5 = calcL5;
+            if (t.L7 === cache_A100.L7 || t.L7 === 0 || t.L7 === '') t.L7 = calcL7;
+
+            // 更新缓存为最新计算值，作为下次比对的参照标准
+            cache_A100.L1 = calcL1;
+            cache_A100.L2 = calcL2;
+            cache_A100.L4 = calcL4;
+            cache_A100.L5 = calcL5;
+            cache_A100.L7 = calcL7;
+
             t.L16 = (db.A101010?.L16 || 0) + (db.A101020?.L35 || 0);
             t.L17 = (db.A102010?.L16 || 0) + (db.A102020?.L33 || 0);
             
