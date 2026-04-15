@@ -1,7 +1,7 @@
 // forms/group_0000-4000.js
 
 // 用于记录A100000主表默认计算结果的缓存，实现“默认公式计算也可以手动填写”
-let cache_A100 = { L1: 0, L2: 0, L4: 0, L5: 0, L7: 0 };
+let cache_A100 = { L1: 0, L2: 0, L4: 0, L5: 0, L7: 0, L16: 0, L17: 0, L31: 0, L34: 0, L35: 0 };
 
 export const formBundle = {
     // ==========================================
@@ -120,8 +120,8 @@ export const formBundle = {
                 { line: '13', text: '加：资产减值损失 (损失以“-”号填列)', key: 'L13', indent: 1 },
                 { line: '14', text: '加：资产处置收益 (损失以“-”号填列)', key: 'L14', indent: 1 },
                 { line: '15', text: '二、营业利润 (亏损以“-”号填列)', key: 'L15', isBold: true, isReadonly: true },
-                { line: '16', text: '加：营业外收入 (填写A101010/101020/103000)', key: 'L16', indent: 1, isReadonly: true },
-                { line: '17', text: '减：营业外支出 (填写A102010/102020/103000)', key: 'L17', indent: 1, isReadonly: true },
+                { line: '16', text: '加：营业外收入 (填写A101010/101020/103000)', key: 'L16', indent: 1 },
+                { line: '17', text: '减：营业外支出 (填写A102010/102020/103000)', key: 'L17', indent: 1 },
                 { line: '18', text: '三、利润总额 (15+16-17)', key: 'L18', isBold: true, isReadonly: true },
                 { line: '19', text: '减：境外所得 (填写A108010)', key: 'L19', indent: 1 },
                 { line: '20', text: '加：纳税调整增加额 (填写A105000)', key: 'L20', indent: 1 },
@@ -137,13 +137,13 @@ export const formBundle = {
                 { line: '28', text: '五、应纳税所得额 (24-25-26-27)', key: 'L28', isBold: true, isReadonly: true },
                 { line: '29', text: '税率 (25%)', key: 'L29', indent: 1 },
                 { line: '30', text: '六、应纳所得税额 (28×29)', key: 'L30', isBold: true, isReadonly: true },
-                { line: '31', text: '减：减免所得税额 (31.1+31.2+…)', key: 'L31', indent: 1, isReadonly: true },
+                { line: '31', text: '减：减免所得税额 (31.1+31.2+…)', key: 'L31', indent: 1 },
                 { line: '31.1', text: '（填写优惠事项名称）', key: 'L31_1', indent: 2 },
                 { line: '31.2', text: '（填写优惠事项名称）', key: 'L31_2', indent: 2 },
                 { line: '32', text: '减：抵免所得税额 (填写A107050)', key: 'L32', indent: 1 },
                 { line: '33', text: '七、应纳税额 (30-31-32)', key: 'L33', isBold: true, isReadonly: true },
-                { line: '34', text: '加：境外所得应纳所得税额 (填写A108000)', key: 'L34', indent: 1, isReadonly: true },
-                { line: '35', text: '减：境外所得抵免所得税额 (填写A108000)', key: 'L35', indent: 1, isReadonly: true },
+                { line: '34', text: '加：境外所得应纳所得税额 (填写A108000)', key: 'L34', indent: 1 },
+                { line: '35', text: '减：境外所得抵免所得税额 (填写A108000)', key: 'L35', indent: 1 },
                 { line: '36', text: '八、实际应纳所得税额 (33+34-35)', key: 'L36', isBold: true, isReadonly: true },
                 { line: '37', text: '减：本年累计预缴所得税额', key: 'L37', indent: 1 },
                 { line: '38', text: '九、本年应补（退）所得税额 (36-37)', key: 'L38', isBold: true, isReadonly: true },
@@ -167,6 +167,15 @@ export const formBundle = {
             const calcL5 = db.A104000?.L26_C3 || 0;
             const calcL7 = db.A104000?.L26_C5 || 0;
 
+            const calcL16 = (db.A101010?.L16 || 0) + (db.A101020?.L35 || 0);
+            const calcL17 = (db.A102010?.L16 || 0) + (db.A102020?.L33 || 0);
+            
+            const calcL31 = (t.L31_1 || 0) + (t.L31_2 || 0);
+            
+            // 关联 A108000 数据（如果系统已初始化了该表）
+            const calcL34 = db.A108000?.L10_C9 || 0;
+            const calcL35 = db.A108000?.L10_C12 || 0;
+
             // 智能赋值：如果输入框的值等于上一次算出的结果，或者是初始的0/空（说明用户没有手动改过或已清空还原），则应用公式；
             // 否则保留用户手动输入的值，切断自动覆盖
             if (t.L1 === cache_A100.L1 || t.L1 === 0 || t.L1 === '') t.L1 = calcL1;
@@ -174,6 +183,12 @@ export const formBundle = {
             if (t.L4 === cache_A100.L4 || t.L4 === 0 || t.L4 === '') t.L4 = calcL4;
             if (t.L5 === cache_A100.L5 || t.L5 === 0 || t.L5 === '') t.L5 = calcL5;
             if (t.L7 === cache_A100.L7 || t.L7 === 0 || t.L7 === '') t.L7 = calcL7;
+            
+            if (t.L16 === cache_A100.L16 || t.L16 === 0 || t.L16 === '') t.L16 = calcL16;
+            if (t.L17 === cache_A100.L17 || t.L17 === 0 || t.L17 === '') t.L17 = calcL17;
+            if (t.L31 === cache_A100.L31 || t.L31 === 0 || t.L31 === '') t.L31 = calcL31;
+            if (t.L34 === cache_A100.L34 || t.L34 === 0 || t.L34 === '') t.L34 = calcL34;
+            if (t.L35 === cache_A100.L35 || t.L35 === 0 || t.L35 === '') t.L35 = calcL35;
 
             // 更新缓存为最新计算值，作为下次比对的参照标准
             cache_A100.L1 = calcL1;
@@ -181,17 +196,14 @@ export const formBundle = {
             cache_A100.L4 = calcL4;
             cache_A100.L5 = calcL5;
             cache_A100.L7 = calcL7;
-
-            t.L16 = (db.A101010?.L16 || 0) + (db.A101020?.L35 || 0);
-            t.L17 = (db.A102010?.L16 || 0) + (db.A102020?.L33 || 0);
-            
-            // 关联 A108000 数据（如果系统已初始化了该表）
-            t.L34 = db.A108000?.L10_C9 || 0;
-            t.L35 = db.A108000?.L10_C12 || 0;
+            cache_A100.L16 = calcL16;
+            cache_A100.L17 = calcL17;
+            cache_A100.L31 = calcL31;
+            cache_A100.L34 = calcL34;
+            cache_A100.L35 = calcL35;
             
             // 优惠事项明细加总
             t.L22 = (t.L22_1 || 0) + (t.L22_2 || 0);
-            t.L31 = (t.L31_1 || 0) + (t.L31_2 || 0);
 
             // 表内利润及税额计算
             t.L15 = t.L1 - t.L2 - (t.L3 || 0) - t.L4 - t.L5 - (t.L6 || 0) - t.L7 + (t.L8 || 0) + (t.L9 || 0) + (t.L10 || 0) + (t.L11 || 0) + (t.L12 || 0) + (t.L13 || 0) + (t.L14 || 0);
