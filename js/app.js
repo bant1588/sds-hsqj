@@ -45,10 +45,11 @@ const App = {
                         </div>
                     </div>
                     <div class="directory-list" style="margin-top: 20px;">
-                        <label v-for="item in fullCatalog" :key="item.id" class="checkbox-item">
-                            <input type="checkbox" :value="item.id" v-model="selectedIds">
+                        <label v-for="item in fullCatalog" :key="item.id" class="checkbox-item" :style="mandatoryIds.includes(item.id) ? 'opacity: 0.7; cursor: not-allowed;' : ''">
+                            <input type="checkbox" :value="item.id" v-model="selectedIds" :disabled="mandatoryIds.includes(item.id)">
                             <span class="form-id">{{ item.id }}</span>
                             <span class="form-name">{{ item.name }}</span>
+                            <span v-if="mandatoryIds.includes(item.id)" style="color: #e53935; font-size: 12px; margin-left: 5px; font-weight: normal;">(必填)</span>
                         </label>
                     </div>
                 </div>
@@ -134,7 +135,10 @@ const App = {
             { id: 'A109010', name: '企业所得税汇总纳税分支机构所得税分配表' }
         ])
         
-        const selectedIds = ref(['A000000', 'A100000', 'A105000', 'A105050', 'A105080', 'A106000'])
+        // 定义必选的表单ID
+        const mandatoryIds = ['A000000', 'A100000', 'A105000', 'A105050', 'A105080', 'A106000']
+        // 初始化时选中必选表单
+        const selectedIds = ref([...mandatoryIds])
         
         const isFilling = ref(false)
         const isExporting = ref(false)
@@ -147,7 +151,8 @@ const App = {
         const selectedForms = computed(() => fullCatalog.value.filter(i => selectedIds.value.includes(i.id)))
 
         const selectAll = () => { selectedIds.value = fullCatalog.value.map(i => i.id) }
-        const deselectAll = () => { selectedIds.value = [] }
+        // 取消全选时，恢复到必选项，而不是全部清空
+        const deselectAll = () => { selectedIds.value = [...mandatoryIds] }
 
         const handleReset = () => {
             if (confirm('确认要清空所有已填报的数据吗？该操作不可撤销。')) {
@@ -213,7 +218,7 @@ const App = {
         }
 
         return { 
-            fullCatalog, selectedIds, isFilling, selectedForms, currentMenu, 
+            fullCatalog, selectedIds, mandatoryIds, isFilling, selectedForms, currentMenu, 
             isCurrentFormConfig, currentConfig, currentView, isExporting,
             startFilling, switchTab, selectAll, deselectAll, handleReset, handleExport
         }
