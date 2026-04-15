@@ -27,14 +27,15 @@ const PlaceholderForm = {
 const App = {
     components: { TaxTableRenderer },
     template: `
-        <div>
-            <div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #fff3cd; color: #856404; text-align: center; padding: 12px; font-weight: bold; z-index: 9999; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-bottom: 1px solid #ffeeba;">
-                💡 本系统属于模拟系统，仅用于学习交流，具体依税务实际征税为准!  加微信进群 13519445134
+        <div class="app-container">
+            <div class="top-banner" style="position: fixed; top: 0; left: 0; width: 100%; background-color: #fff3cd; color: #856404; text-align: center; padding: 12px 0; font-weight: bold; z-index: 1000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-bottom: 1px solid #ffeeba; font-size: 14px;">
+                💡 本系统属于模拟系统，仅用于学习交流，具体依税务实际征税为准! &nbsp; 加微信进群 13519445134
             </div>
 
-            <div style="padding-top: 48px; height: 100%;">
+            <div style="padding-top: 45px; min-height: 100vh;">
+                
                 <div v-if="!isFilling" class="directory-container">
-                    <div class="directory-header">
+                    <div class="directory-header" style="position: sticky; top: 45px; background: white; z-index: 999; padding: 20px 0; border-bottom: 1px solid #eee;">
                         <h2>企业所得税申报系统</h2>
                         <div class="action-group">
                             <button class="btn default-btn" @click="selectAll">全选</button>
@@ -44,7 +45,7 @@ const App = {
                             </button>
                         </div>
                     </div>
-                    <div class="directory-list">
+                    <div class="directory-list" style="margin-top: 20px;">
                         <label v-for="item in fullCatalog" :key="item.id" class="checkbox-item">
                             <input type="checkbox" :value="item.id" v-model="selectedIds">
                             <span class="form-id">{{ item.id }}</span>
@@ -52,26 +53,36 @@ const App = {
                         </label>
                     </div>
                 </div>
-                
+
                 <div v-else class="workspace">
                     <div class="sidebar">
-                        <div class="sidebar-header"><button class="back-btn" @click="isFilling = false">← 返回目录</button></div>
+                        <div class="sidebar-header" style="position: sticky; top: 45px; background: #f8f9fa; z-index: 997; padding: 15px 0;">
+                            <button class="back-btn" @click="isFilling = false">← 返回目录</button>
+                        </div>
                         <div v-for="item in selectedForms" :key="item.id" 
                              class="menu-item" :class="{ active: currentMenu === item.id }" @click="switchTab(item)">
                             <div style="font-weight:bold;">{{ item.id }}</div>
                             <div style="font-size:12px;opacity:0.8;line-height:1.4;">{{ item.name }}</div>
                         </div>
                     </div>
-                    <div class="content">
-                        <div class="workspace-actions" style="position: sticky; top: 0; z-index: 998; background: #fff; padding: 15px 10px; border-bottom: 1px solid #eee; margin-top: -10px; margin-bottom: 15px; box-shadow: 0 4px 6px -4px rgba(0,0,0,0.05);">
-                            <button class="btn success-btn" @click="handleExport" :disabled="isExporting">
-                                {{ isExporting ? '导出中...' : '导出到 Excel (分 Sheet)' }}
+                    
+                    <div class="content" style="position: relative;">
+                        <div class="workspace-actions" style="position: sticky; top: 45px; z-index: 998; background: #ffffff; padding: 15px; border-bottom: 2px solid #4a90e2; margin-bottom: 20px; box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05); display: flex; gap: 10px;">
+                            <button class="btn success-btn" @click="handleExport" :disabled="isExporting" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                {{ isExporting ? '正在准备导出...' : '📥 导出到 Excel (分 Sheet)' }}
                             </button>
-                            <button class="btn danger-btn" @click="handleReset">重置填写数据</button>
+                            <button class="btn danger-btn" @click="handleReset" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                🗑️ 重置填写数据
+                            </button>
+                            <div style="margin-left: auto; align-self: center; color: #666; font-size: 13px;">
+                                当前表单：<strong>{{ currentMenu }}</strong>
+                            </div>
                         </div>
-                        
-                        <TaxTableRenderer v-if="isCurrentFormConfig" :config="currentConfig" />
-                        <component v-else :is="currentView" />
+
+                        <div class="table-scroll-container">
+                            <TaxTableRenderer v-if="isCurrentFormConfig" :config="currentConfig" />
+                            <component v-else :is="currentView" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -127,18 +138,15 @@ const App = {
 
         const selectedForms = computed(() => fullCatalog.value.filter(i => selectedIds.value.includes(i.id)))
 
-        // 全选 / 取消全选
         const selectAll = () => { selectedIds.value = fullCatalog.value.map(i => i.id) }
         const deselectAll = () => { selectedIds.value = [] }
 
-        // 重置数据
         const handleReset = () => {
             if (confirm('确认要清空所有已填报的数据吗？该操作不可撤销。')) {
                 resetDB()
             }
         }
 
-        // 导出 Excel (触发新的多 Sheet 逻辑)
         const handleExport = async () => {
             isExporting.value = true
             try {
