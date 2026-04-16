@@ -68,24 +68,20 @@ export const formBundle = {
             const subtotalRows = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30];
             const colsToSum = [4, 5, 6, 7, 8, 9, 10, 11];
 
-            // Calculate Col 11 for non-asterisk rows
             for (let r = 1; r <= 30; r++) {
                 if (!subtotalRows.includes(r) && r !== 10 && r !== 11) {
                     t[`L${r}_C11`] = (t[`L${r}_C9`] || 0) + (t[`L${r}_C10`] || 0) * 0.5;
                 }
             }
 
-            // Calculate subtotals
             subtotalRows.forEach((subRow) => {
                 colsToSum.forEach(c => {
                     t[`L${subRow}_C${c}`] = (t[`L${subRow-2}_C${c}`] || 0) + (t[`L${subRow-1}_C${c}`] || 0);
                 });
             });
 
-            // Calculate row 12 Col 11 manually since 10, 11 have asterisks in Col 11
             t['L12_C11'] = (t['L12_C9'] || 0) + (t['L12_C10'] || 0) * 0.5;
 
-            // Calculate Grand Total (Row 31)
             colsToSum.forEach(c => {
                 t[`L31_C${c}`] = subtotalRows.reduce((acc, r) => acc + (t[`L${r}_C${c}`] || 0), 0);
             });
@@ -182,23 +178,23 @@ export const formBundle = {
                 { inputs: [{type: 'label', value: '3', style: 'text-align:center;'}, {type: 'label', value: '关键指标情况', colspan: 6, style: 'font-weight:bold;text-align:center;'}] },
                 { inputs: [
                     {type: 'label', value: '4', style: 'text-align:center;'}, {type: 'label', value: '收入<br>指标', rowspan: 7, style: 'text-align:center;width:8%;'}, 
-                    {type: 'label', value: '一、本年高新技术产品（服务）收入 (5+6)', style: 'text-align:left;'}, {key: 'L4_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}
+                    {type: 'label', value: '一、本年高新技术产品（服务）收入（5+6）', style: 'text-align:left;'}, {key: 'L4_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}
                 ]},
                 { inputs: [{type: 'label', value: '5', style: 'text-align:center;'}, {type: 'label', value: '其中：产品（服务）收入', style: 'text-align:left;padding-left:30px;'}, {key: 'L5_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
                 { inputs: [{type: 'label', value: '6', style: 'text-align:center;'}, {type: 'label', value: '技术性收入', style: 'text-align:left;padding-left:30px;'}, {key: 'L6_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
-                { inputs: [{type: 'label', value: '7', style: 'text-align:center;'}, {type: 'label', value: '二、本年企业总收入 (8-9)', style: 'text-align:left;'}, {key: 'L7_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { inputs: [{type: 'label', value: '7', style: 'text-align:center;'}, {type: 'label', value: '二、本年企业总收入（8-9）', style: 'text-align:left;'}, {key: 'L7_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
                 { inputs: [{type: 'label', value: '8', style: 'text-align:center;'}, {type: 'label', value: '其中：收入总额', style: 'text-align:left;padding-left:30px;'}, {key: 'L8_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
                 { inputs: [{type: 'label', value: '9', style: 'text-align:center;'}, {type: 'label', value: '不征税收入', style: 'text-align:left;padding-left:30px;'}, {key: 'L9_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
-                { inputs: [{type: 'label', value: '10', style: 'text-align:center;'}, {type: 'label', value: '三、高新收入占总收入比例 (4÷7)', style: 'text-align:left;'}, {key: 'L10_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { inputs: [{type: 'label', value: '10', style: 'text-align:center;'}, {type: 'label', value: '三、本年高新技术产品（服务）收入占企业总收入的比例（4÷7）', style: 'text-align:left;'}, {key: 'L10_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
                 { inputs: [{type: 'label', value: '11', style: 'text-align:center;'}, {type: 'label', value: '人员<br>指标', rowspan: 3, style: 'text-align:center;'}, {type: 'label', value: '四、本年科技人员数', style: 'text-align:left;'}, {key: 'L11_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
                 { inputs: [{type: 'label', value: '12', style: 'text-align:center;'}, {type: 'label', value: '五、本年职工总数', style: 'text-align:left;'}, {key: 'L12_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
-                { inputs: [{type: 'label', value: '13', style: 'text-align:center;'}, {type: 'label', value: '六、科技人员占比 (11÷12)', style: 'text-align:left;'}, {key: 'L13_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { inputs: [{type: 'label', value: '13', style: 'text-align:center;'}, {type: 'label', value: '六、本年科技人员占企业当年职工总数的比例（11÷12）', style: 'text-align:left;'}, {key: 'L13_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
                 { inputs: [
                     {type: 'label', value: '14', style: 'text-align:center;'}, {type: 'label', value: '高新创发费用归集年度', colspan: 2, style: 'text-align:center;font-weight:bold;'}, 
                     {type: 'label', value: '本年度<br>1', style: 'text-align:center;width:12%;'}, {type: 'label', value: '前一年度<br>2', style: 'text-align:center;width:12%;'}, {type: 'label', value: '前二年度<br>3', style: 'text-align:center;width:12%;'}, {type: 'label', value: '合计<br>4', style: 'text-align:center;width:12%;'}
                 ]},
-                { inputs: [{type: 'label', value: '15', style: 'text-align:center;'}, {type: 'label', value: '研发<br>费用<br>指标', rowspan: 14, style: 'text-align:center;'}, {type: 'label', value: '七、归集的高新研发费用金额 (16+25)', style: 'text-align:left;'}, {key: 'L15_C1', isReadonly:true}, {key: 'L15_C2', isReadonly:true}, {key: 'L15_C3', isReadonly:true}, {key: 'L15_C4', isReadonly:true}] },
-                { inputs: [{type: 'label', value: '16', style: 'text-align:center;'}, {type: 'label', value: '（一）内部研究开发投入 (17+..+22+24)', style: 'text-align:left;padding-left:20px;'}, {key: 'L16_C1', isReadonly:true}, {key: 'L16_C2', isReadonly:true}, {key: 'L16_C3', isReadonly:true}, {key: 'L16_C4', isReadonly:true}] },
+                { inputs: [{type: 'label', value: '15', style: 'text-align:center;'}, {type: 'label', value: '研发<br>费用<br>指标', rowspan: 16, style: 'text-align:center;'}, {type: 'label', value: '七、归集的高新研发费用金额（16+25）', style: 'text-align:left;'}, {key: 'L15_C1', isReadonly:true}, {key: 'L15_C2', isReadonly:true}, {key: 'L15_C3', isReadonly:true}, {key: 'L15_C4', isReadonly:true}] },
+                { inputs: [{type: 'label', value: '16', style: 'text-align:center;'}, {type: 'label', value: '（一）内部研究开发投入（17+…+22+24）', style: 'text-align:left;padding-left:20px;'}, {key: 'L16_C1', isReadonly:true}, {key: 'L16_C2', isReadonly:true}, {key: 'L16_C3', isReadonly:true}, {key: 'L16_C4', isReadonly:true}] },
                 { inputs: [{type: 'label', value: '17', style: 'text-align:center;'}, {type: 'label', value: '1. 人员人工费用', style: 'text-align:left;padding-left:40px;'}, {key: 'L17_C1'}, {key: 'L17_C2'}, {key: 'L17_C3'}, {key: 'L17_C4', isReadonly:true}] },
                 { inputs: [{type: 'label', value: '18', style: 'text-align:center;'}, {type: 'label', value: '2. 直接投入费用', style: 'text-align:left;padding-left:40px;'}, {key: 'L18_C1'}, {key: 'L18_C2'}, {key: 'L18_C3'}, {key: 'L18_C4', isReadonly:true}] },
                 { inputs: [{type: 'label', value: '19', style: 'text-align:center;'}, {type: 'label', value: '3. 折旧费用与长期待摊费用', style: 'text-align:left;padding-left:40px;'}, {key: 'L19_C1'}, {key: 'L19_C2'}, {key: 'L19_C3'}, {key: 'L19_C4', isReadonly:true}] },
@@ -207,14 +203,14 @@ export const formBundle = {
                 { inputs: [{type: 'label', value: '22', style: 'text-align:center;'}, {type: 'label', value: '6. 装备调试费与试验费用', style: 'text-align:left;padding-left:40px;'}, {key: 'L22_C1'}, {key: 'L22_C2'}, {key: 'L22_C3'}, {key: 'L22_C4', isReadonly:true}] },
                 { inputs: [{type: 'label', value: '23', style: 'text-align:center;'}, {type: 'label', value: '7. 其他费用', style: 'text-align:left;padding-left:40px;'}, {key: 'L23_C1'}, {key: 'L23_C2'}, {key: 'L23_C3'}, {key: 'L23_C4', isReadonly:true}] },
                 { inputs: [{type: 'label', value: '24', style: 'text-align:center;'}, {type: 'label', value: '其中：可计入研发费用的其他费用', style: 'text-align:left;padding-left:60px;'}, {key: 'L24_C1'}, {key: 'L24_C2'}, {key: 'L24_C3'}, {key: 'L24_C4', isReadonly:true}] },
-                { inputs: [{type: 'label', value: '25', style: 'text-align:center;'}, {type: 'label', value: '（二）委托外部研发费用 [(26+28)×80%]', style: 'text-align:left;padding-left:20px;'}, {key: 'L25_C1', isReadonly:true}, {key: 'L25_C2', isReadonly:true}, {key: 'L25_C3', isReadonly:true}, {key: 'L25_C4', isReadonly:true}] },
+                { inputs: [{type: 'label', value: '25', style: 'text-align:center;'}, {type: 'label', value: '（二）委托外部研发费用 [ (26+28)×80% ]', style: 'text-align:left;padding-left:20px;'}, {key: 'L25_C1', isReadonly:true}, {key: 'L25_C2', isReadonly:true}, {key: 'L25_C3', isReadonly:true}, {key: 'L25_C4', isReadonly:true}] },
                 { inputs: [{type: 'label', value: '26', style: 'text-align:center;'}, {type: 'label', value: '1. 境内的外部研发费', style: 'text-align:left;padding-left:40px;'}, {key: 'L26_C1'}, {key: 'L26_C2'}, {key: 'L26_C3'}, {key: 'L26_C4', isReadonly:true}] },
                 { inputs: [{type: 'label', value: '27', style: 'text-align:center;'}, {type: 'label', value: '2. 境外的外部研发费', style: 'text-align:left;padding-left:40px;'}, {key: 'L27_C1'}, {key: 'L27_C2'}, {key: 'L27_C3'}, {key: 'L27_C4', isReadonly:true}] },
                 { inputs: [{type: 'label', value: '28', style: 'text-align:center;'}, {type: 'label', value: '其中：可计入研发费用的境外的外部研发费', style: 'text-align:left;padding-left:60px;'}, {key: 'L28_C1'}, {key: 'L28_C2'}, {key: 'L28_C3'}, {key: 'L28_C4', isReadonly:true}] },
-                { inputs: [{type: 'label', value: '29', style: 'text-align:center;'}, {type: 'label', value: '八、销售（营业）收入', colspan: 2, style: 'text-align:left;'}, {key: 'L29_C1'}, {key: 'L29_C2'}, {key: 'L29_C3'}, {key: 'L29_C4', isReadonly:true}] },
-                { inputs: [{type: 'label', value: '30', style: 'text-align:center;'}, {type: 'label', value: '九、三年研发费用占销售收入比例', colspan: 2, style: 'text-align:left;'}, {key: 'L30_C4', isReadonly:true, colspan: 4}] },
-                { inputs: [{type: 'label', value: '31', style: 'text-align:center;'}, {type: 'label', value: '减免<br>税额', rowspan: 2, style: 'text-align:center;'}, {type: 'label', value: '十、国家需要重点扶持的高新技术企业减免', style: 'text-align:left;'}, {key: 'L31_C4', colspan: 4}] },
-                { inputs: [{type: 'label', value: '32', style: 'text-align:center;'}, {type: 'label', value: '十一、经济特区和上海浦东新区定期减免', style: 'text-align:left;'}, {key: 'L32_C4', colspan: 4}] }
+                { inputs: [{type: 'label', value: '29', style: 'text-align:center;'}, {type: 'label', value: '八、销售（营业）收入', style: 'text-align:left;'}, {key: 'L29_C1'}, {key: 'L29_C2'}, {key: 'L29_C3'}, {key: 'L29_C4', isReadonly:true}] },
+                { inputs: [{type: 'label', value: '30', style: 'text-align:center;'}, {type: 'label', value: '九、三年研发费用占销售（营业）收入的比例（15行4列÷29行4列）', style: 'text-align:left;'}, {key: 'L30_C4', isReadonly:true, colspan: 4}] },
+                { inputs: [{type: 'label', value: '31', style: 'text-align:center;'}, {type: 'label', value: '减免<br>税额', rowspan: 2, style: 'text-align:center;'}, {type: 'label', value: '十、国家需要重点扶持的高新技术企业减征企业所得税', style: 'text-align:left;'}, {key: 'L31_C4', colspan: 4}] },
+                { inputs: [{type: 'label', value: '32', style: 'text-align:center;'}, {type: 'label', value: '十一、经济特区和上海浦东新区设立的高新技术企业定期减免税额', style: 'text-align:left;'}, {key: 'L32_C4', colspan: 4}] }
             ]
         },
         logic: (db) => {
@@ -230,10 +226,11 @@ export const formBundle = {
                 t[`L25_C${c}`] = ((t[`L26_C${c}`]||0) + (t[`L28_C${c}`]||0)) * 0.8;
                 t[`L15_C${c}`] = (t[`L16_C${c}`]||0) + (t[`L25_C${c}`]||0);
             }
+            
             for (let r = 15; r <= 29; r++) {
-                if (r===23) continue;
                 t[`L${r}_C4`] = (t[`L${r}_C1`] || 0) + (t[`L${r}_C2`] || 0) + (t[`L${r}_C3`] || 0);
             }
+            
             t.L30_C4 = t.L29_C4 ? (t.L15_C4 / t.L29_C4).toFixed(4) : 0;
         }
     },
