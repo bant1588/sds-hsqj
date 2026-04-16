@@ -12,81 +12,127 @@ export const formBundle = {
             id: 'A000000',
             title: '企业所得税年度纳税申报基础信息表 (A000000)',
             columns: [
-                { title: '项目代码/序号', width: '15%', align: 'center' },
-                { title: '项 目 名 称', width: '55%', align: 'left' },
-                { title: '填 报 内 容', width: '30%', align: 'center' }
+                { width: '16%' }, { width: '14%' }, { width: '20%' },
+                { width: '10%' }, { width: '25%' }, { width: '15%' }
             ],
             rows: [
-                { line: '-', text: '【基本经营情况（必填项目）】', isBold: true, isReadonly: true },
-                { line: '101', text: '纳税申报企业类型（填写代码）', key: 'L101', type: 'text' },
-                { line: '102', text: '分支机构就地纳税比例（%）', key: 'L102', type: 'number' },
-                { line: '103', text: '资产总额（填写平均值，单位：万元）', key: 'L103', type: 'number' },
-                { line: '104', text: '从业人数（填写平均值，单位：人）', key: 'L104', type: 'number' },
-                { line: '105', text: '所属国民经济行业（填写代码）', key: 'L105', type: 'text' },
-                { line: '106', text: '从事国家限制或禁止行业（□是 □否）', key: 'L106', type: 'text' },
-                { line: '107', text: '适用会计准则或会计制度（填写代码）', key: 'L107', type: 'text' },
-                { line: '108', text: '采用一般企业财务报表格式（2019年版）（□是 □否）', key: 'L108', type: 'text' },
-                { line: '109', text: '小型微利企业（□是 □否）', key: 'L109', type: 'text' },
-                { line: '110', text: '上市公司（□是（□境内 □境外） □否）', key: 'L110', type: 'text' },
+                { inputs: [{type: 'label', value: '基本经营情况（必填项目）', colspan: 6, style: 'font-weight:bold;text-align:center;background-color:#fafafa;'}] },
+                { inputs: [
+                    {type: 'label', value: '101 纳税申报企业类型（填写代码）', colspan: 2, style: 'text-align:left;'}, {key: 'L101', type: 'text'},
+                    {type: 'label', value: '102 分支机构就地纳税比例（%）', colspan: 2, style: 'text-align:left;'}, {key: 'L102', type: 'number'}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '103 资产总额（填写平均值，单位：万元）', colspan: 2, style: 'text-align:left;'}, {key: 'L103', type: 'number'},
+                    {type: 'label', value: '104 从业人数（填写平均值，单位：人）', colspan: 2, style: 'text-align:left;'}, {key: 'L104', type: 'number'}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '105 所属国民经济行业（填写代码）', colspan: 2, style: 'text-align:left;'}, {key: 'L105', type: 'text'},
+                    {type: 'label', value: '106 从事国家限制或禁止行业', colspan: 2, style: 'text-align:left;'}, {key: 'L106', type: 'radio', options: ['是', '否']}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '107 适用会计准则或会计制度（填写代码）', colspan: 2, style: 'text-align:left;'}, {key: 'L107', type: 'text'},
+                    {type: 'label', value: '108 采用一般企业财务报表格式（2019年版）', colspan: 2, style: 'text-align:left;'}, {key: 'L108', type: 'radio', options: ['是', '否']}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '109 小型微利企业', colspan: 2, style: 'text-align:left;'}, {key: 'L109', type: 'radio', options: ['是', '否']},
+                    {type: 'label', value: '110 上市公司', style: 'text-align:left;'}, {key: 'L110', type: 'radio', options: ['是(境内)', '是(境外)', '否'], colspan: 2}
+                ]},
 
-                { line: '-', text: '【有关涉税事项情况（存在或者发生下列事项时必填）】', isBold: true, isReadonly: true },
-                { line: '201', text: '从事股权投资业务（□是）', key: 'L201', type: 'text' },
-                { line: '202', text: '存在境外关联交易（□是）', key: 'L202', type: 'text' },
-                { line: '203-1', text: '境外所得信息 - 选择采用的境外所得抵免方式（□分国（地区）不分项 □不分国（地区）不分项）', key: 'L203_1', type: 'text' },
-                { line: '203-2', text: '境外所得信息 - 新增境外直接投资信息（□是（产业类别：□旅游业 □现代服务业 □高新技术产业））', key: 'L203_2', type: 'text' },
-                { line: '204', text: '有限合伙制创业投资企业的法人合伙人（□是）', key: 'L204', type: 'text' },
-                { line: '205', text: '创业投资企业（□是）', key: 'L205', type: 'text' },
-                { line: '206', text: '技术先进型服务企业类型（填写代码）', key: 'L206', type: 'text' },
-                { line: '207', text: '非营利组织（□是）', key: 'L207', type: 'text' },
-                { line: '208', text: '软件、集成电路企业类型（填写代码）', key: 'L208', type: 'text' },
-                { line: '209', text: '集成电路生产项目类型（□130纳米 □65纳米 □28纳米）', key: 'L209', type: 'text' },
-                { line: '210-1', text: '科技型中小企业 - __年（申报所属期年度）入库编号 1', key: 'L210_1', type: 'text' },
-                { line: '210-2', text: '科技型中小企业 - 入库时间 1', key: 'L210_2', type: 'text' },
-                { line: '210-3', text: '科技型中小企业 - __年（所属期下一年度）入库编号 2', key: 'L210_3', type: 'text' },
-                { line: '210-4', text: '科技型中小企业 - 入库时间 2', key: 'L210_4', type: 'text' },
-                { line: '211-1', text: '高新技术企业申报所属年度有效的高新技术企业证书 - 证书编号 1', key: 'L211_1', type: 'text' },
-                { line: '211-2', text: '高新技术企业申报所属年度有效的高新技术企业证书 - 发证时间 1', key: 'L211_2', type: 'text' },
-                { line: '211-3', text: '高新技术企业申报所属年度有效的高新技术企业证书 - 证书编号 2', key: 'L211_3', type: 'text' },
-                { line: '211-4', text: '高新技术企业申报所属年度有效的高新技术企业证书 - 发证时间 2', key: 'L211_4', type: 'text' },
-                { line: '212', text: '重组事项税务处理方式（□一般性 □特殊性）', key: 'L212', type: 'text' },
-                { line: '213', text: '重组交易类型（填写代码）', key: 'L213', type: 'text' },
-                { line: '214', text: '重组当事方类型（填写代码）', key: 'L214', type: 'text' },
-                { line: '215', text: '政策性搬迁开始时间（年 月）', key: 'L215', type: 'text' },
-                { line: '216', text: '发生政策性搬迁且停止生产经营无所得年度（□是）', key: 'L216', type: 'text' },
-                { line: '217', text: '政策性搬迁损失分期扣除年度（□是）', key: 'L217', type: 'text' },
-                { line: '218', text: '发生非货币性资产对外投资递延纳税事项（□是）', key: 'L218', type: 'text' },
-                { line: '219', text: '非货币性资产对外投资转让所得递延纳税年度（□是）', key: 'L219', type: 'text' },
-                { line: '220', text: '发生技术成果投资入股递延纳税事项（□是）', key: 'L220', type: 'text' },
-                { line: '221', text: '技术成果投资入股递延纳税年度（□是）', key: 'L221', type: 'text' },
-                { line: '222', text: '发生资产（股权）划转特殊性税务处理事项（□是）', key: 'L222', type: 'text' },
-                { line: '223', text: '债务重组所得递延纳税年度（□是）', key: 'L223', type: 'text' },
-                { line: '224', text: '研发支出辅助账样式（□2015版 □2021版 □自行设计）', key: 'L224', type: 'text' },
+                { inputs: [{type: 'label', value: '有关涉税事项情况（存在或者发生下列事项时必填）', colspan: 6, style: 'font-weight:bold;text-align:center;background-color:#fafafa;'}] },
+                { inputs: [
+                    {type: 'label', value: '201 从事股权投资业务', colspan: 2, style: 'text-align:left;'}, {key: 'L201', type: 'radio', options: ['是', '否']},
+                    {type: 'label', value: '202 存在境外关联交易', colspan: 2, style: 'text-align:left;'}, {key: 'L202', type: 'radio', options: ['是', '否']}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '203 境外所得<br>信息', rowspan: 2, style: 'text-align:center;'},
+                    {type: 'label', value: '203-1 选择采用的境外所得抵免方式', colspan: 2, style: 'text-align:left;'},
+                    {key: 'L203_1', type: 'radio', options: ['分国(地区)不分项', '不分国(地区)不分项'], colspan: 3}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '203-2 新增境外直接投资信息', colspan: 2, style: 'text-align:left;'},
+                    {key: 'L203_2', type: 'radio', options: ['是(旅游业)', '是(现代服务业)', '是(高新技术产业)', '否'], colspan: 3}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '204 有限合伙制创业投资企业的法人合伙人', colspan: 2, style: 'text-align:left;'}, {key: 'L204', type: 'radio', options: ['是']},
+                    {type: 'label', value: '205 创业投资企业', colspan: 2, style: 'text-align:left;'}, {key: 'L205', type: 'radio', options: ['是']}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '206 技术先进型服务企业类型（填写代码）', colspan: 2, style: 'text-align:left;'}, {key: 'L206', type: 'text'},
+                    {type: 'label', value: '207 非营利组织', colspan: 2, style: 'text-align:left;'}, {key: 'L207', type: 'radio', options: ['是']}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '208 软件、集成电路企业类型（填写代码）', colspan: 2, style: 'text-align:left;'}, {key: 'L208', type: 'text'},
+                    {type: 'label', value: '209 集成电路生产项目类型', colspan: 2, style: 'text-align:left;'}, {key: 'L209', type: 'radio', options: ['130纳米', '65纳米', '28纳米']}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '210 科技型中<br>小企业', rowspan: 2, style: 'text-align:center;'},
+                    {type: 'label', value: '210-1 __年（申报所属期年度）入库编号 1', colspan: 2, style: 'text-align:left;'}, {key: 'L210_1', type: 'text'},
+                    {type: 'label', value: '210-2 入库时间 1', style: 'text-align:left;'}, {key: 'L210_2', type: 'text'}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '210-3 __年（所属期下一年度）入库编号 2', colspan: 2, style: 'text-align:left;'}, {key: 'L210_3', type: 'text'},
+                    {type: 'label', value: '210-4 入库时间 2', style: 'text-align:left;'}, {key: 'L210_4', type: 'text'}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '211 高新技术<br>企业申报所<br>属期年度有<br>效的高新技<br>术企业证书', rowspan: 2, style: 'text-align:center;'},
+                    {type: 'label', value: '211-1 证书编号 1', colspan: 2, style: 'text-align:left;'}, {key: 'L211_1', type: 'text'},
+                    {type: 'label', value: '211-2 发证时间 1', style: 'text-align:left;'}, {key: 'L211_2', type: 'text'}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '211-3 证书编号 2', colspan: 2, style: 'text-align:left;'}, {key: 'L211_3', type: 'text'},
+                    {type: 'label', value: '211-4 发证时间 2', style: 'text-align:left;'}, {key: 'L211_4', type: 'text'}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '212 重组事项税务处理方式', colspan: 2, style: 'text-align:left;'}, {key: 'L212', type: 'radio', options: ['一般性', '特殊性']},
+                    {type: 'label', value: '213 重组交易类型（填写代码）', colspan: 2, style: 'text-align:left;'}, {key: 'L213', type: 'text'}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '214 重组当事方类型（填写代码）', colspan: 2, style: 'text-align:left;'}, {key: 'L214', type: 'text'},
+                    {type: 'label', value: '215 政策性搬迁开始时间', colspan: 2, style: 'text-align:left;'}, {key: 'L215', type: 'text', placeholder: '年 月'}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '216 发生政策性搬迁且停止生产经营无所得年度', colspan: 2, style: 'text-align:left;'}, {key: 'L216', type: 'radio', options: ['是']},
+                    {type: 'label', value: '217 政策性搬迁损失分期扣除年度', colspan: 2, style: 'text-align:left;'}, {key: 'L217', type: 'radio', options: ['是']}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '218 发生非货币性资产对外投资递延纳税事项', colspan: 2, style: 'text-align:left;'}, {key: 'L218', type: 'radio', options: ['是']},
+                    {type: 'label', value: '219 非货币性资产对外投资转让所得递延纳税年度', colspan: 2, style: 'text-align:left;'}, {key: 'L219', type: 'radio', options: ['是']}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '220 发生技术成果投资入股递延纳税事项', colspan: 2, style: 'text-align:left;'}, {key: 'L220', type: 'radio', options: ['是']},
+                    {type: 'label', value: '221 技术成果投资入股递延纳税年度', colspan: 2, style: 'text-align:left;'}, {key: 'L221', type: 'radio', options: ['是']}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '222 发生资产（股权）划转特殊性税务处理事项', colspan: 2, style: 'text-align:left;'}, {key: 'L222', type: 'radio', options: ['是']},
+                    {type: 'label', value: '223 债务重组所得递延纳税年度', colspan: 2, style: 'text-align:left;'}, {key: 'L223', type: 'radio', options: ['是']}
+                ]},
+                { inputs: [
+                    {type: 'label', value: '224 研发支出辅助账样式', colspan: 2, style: 'text-align:left;'}, {key: 'L224', type: 'radio', options: ['2015版', '2021版', '自行设计'], colspan: 4}
+                ]},
 
-                // 展平后的主要股东及分红情况矩阵
-                { line: '-', text: '【主要股东及分红情况（必填项目）】', isBold: true, isReadonly: true },
-                { line: '301-1', text: '股东1 - 股东名称', key: 'L301_1', type: 'text', indent: 1 },
-                { line: '301-2', text: '股东1 - 证件种类', key: 'L301_2', type: 'text', indent: 1 },
-                { line: '301-3', text: '股东1 - 证件号码', key: 'L301_3', type: 'text', indent: 1 },
-                { line: '301-4', text: '股东1 - 投资比例（%）', key: 'L301_4', type: 'number', indent: 1 },
-                { line: '301-5', text: '股东1 - 当年（决议日）分配的股息、红利等权益性投资收益金额', key: 'L301_5', type: 'number', indent: 1 },
-                { line: '301-6', text: '股东1 - 国籍（注册地址）', key: 'L301_6', type: 'text', indent: 1 },
-                
-                { line: '302-1', text: '股东2 - 股东名称', key: 'L302_1', type: 'text', indent: 1 },
-                { line: '302-2', text: '股东2 - 证件种类', key: 'L302_2', type: 'text', indent: 1 },
-                { line: '302-3', text: '股东2 - 证件号码', key: 'L302_3', type: 'text', indent: 1 },
-                { line: '302-4', text: '股东2 - 投资比例（%）', key: 'L302_4', type: 'number', indent: 1 },
-                { line: '302-5', text: '股东2 - 当年（决议日）分配的股息、红利等权益性投资收益金额', key: 'L302_5', type: 'number', indent: 1 },
-                { line: '302-6', text: '股东2 - 国籍（注册地址）', key: 'L302_6', type: 'text', indent: 1 },
-
-                { line: '303-1', text: '股东3 - 股东名称', key: 'L303_1', type: 'text', indent: 1 },
-                { line: '303-2', text: '股东3 - 证件种类', key: 'L303_2', type: 'text', indent: 1 },
-                { line: '303-3', text: '股东3 - 证件号码', key: 'L303_3', type: 'text', indent: 1 },
-                { line: '303-4', text: '股东3 - 投资比例（%）', key: 'L303_4', type: 'number', indent: 1 },
-                { line: '303-5', text: '股东3 - 当年（决议日）分配的股息、红利等权益性投资收益金额', key: 'L303_5', type: 'number', indent: 1 },
-                { line: '303-6', text: '股东3 - 国籍（注册地址）', key: 'L303_6', type: 'text', indent: 1 },
-
-                { line: '399-1', text: '其余股东合计 - 投资比例（%）', key: 'L399_1', type: 'number', isBold: true },
-                { line: '399-2', text: '其余股东合计 - 当年（决议日）分配的股息、红利等权益性投资收益金额', key: 'L399_2', type: 'number', isBold: true }
+                { inputs: [{type: 'label', value: '主要股东及分红情况（必填项目）', colspan: 6, style: 'font-weight:bold;text-align:center;background-color:#fafafa;'}] },
+                { inputs: [
+                    {type: 'label', value: '股东名称', style: 'text-align:center;font-weight:bold;'},
+                    {type: 'label', value: '证件种类', style: 'text-align:center;font-weight:bold;'},
+                    {type: 'label', value: '证件号码', style: 'text-align:center;font-weight:bold;'},
+                    {type: 'label', value: '投资比例<br>(%)', style: 'text-align:center;font-weight:bold;'},
+                    {type: 'label', value: '当年(决议日)分配的股息、红利等<br>权益性投资收益金额', style: 'text-align:center;font-weight:bold;'},
+                    {type: 'label', value: '国籍(注<br>册地址)', style: 'text-align:center;font-weight:bold;'}
+                ]},
+                ...Array.from({length: 5}).map((_, i) => ({
+                    inputs: [
+                        {key:`L30${i+1}_1`, type:'text'}, {key:`L30${i+1}_2`, type:'text'}, {key:`L30${i+1}_3`, type:'text'},
+                        {key:`L30${i+1}_4`, type:'number'}, {key:`L30${i+1}_5`, type:'number'}, {key:`L30${i+1}_6`, type:'text'}
+                    ]
+                })),
+                { inputs: [
+                    {type: 'label', value: '其余股东合计', style: 'text-align:center;font-weight:bold;'},
+                    {type: 'label', value: '—', style: 'text-align:center;'},
+                    {type: 'label', value: '—', style: 'text-align:center;'},
+                    {key: 'L399_4', type: 'number'},
+                    {key: 'L399_5', type: 'number'},
+                    {type: 'label', value: '—', style: 'text-align:center;'}
+                ]}
             ]
         },
         logic: (db) => {}
