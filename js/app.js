@@ -28,13 +28,18 @@ const App = {
     components: { TaxTableRenderer },
     template: `
         <div class="app-container">
-            <div class="top-banner" style="position: fixed; top: 0; left: 0; width: 100%; background-color: #fff3cd; color: #856404; text-align: center; padding: 12px 0; font-weight: bold; z-index: 2000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-bottom: 1px solid #ffeeba; font-size: 14px; height: 48px; box-sizing: border-box;">
-                💡 本系统属于模拟系统，仅用于学习交流，具体依税务实际征税为准! &nbsp; 加微信进群 13519445134
+            <div class="top-banner" style="position: fixed; top: 0; left: 0; width: 100%; background-color: #fdf5e6; color: #8b4513; display: flex; align-items: center; justify-content: center; gap: 15px; z-index: 2000; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-bottom: 2px solid #ffa500; font-size: 16px; height: 54px; box-sizing: border-box; padding: 0 20px;">
+                <span style="font-size: 20px;">💡</span>
+                <span style="font-weight: 500;">本系统属于模拟系统，仅用于学习交流，具体依税务实际征税为准!</span>
+                <div style="background-color: #07c160; color: white; padding: 6px 16px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 15px;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8.384 15.01c.28 0 .507-.227.507-.508a.508.508 0 0 0-.507-.507.508.508 0 0 0-.508.507c0 .281.227.508.508.508m4.618 0c.28 0 .507-.227.507-.508a.508.508 0 0 0-.507-.507.508.508 0 0 0-.508.507c0 .281.227.508.508.508m2.28-4.524c.71 0 1.284-.46 1.284-1.028s-.574-1.028-1.284-1.028-1.285.46-1.285 1.028.575 1.028 1.285 1.028m-4.225 0c.71 0 1.284-.46 1.284-1.028s-.574-1.028-1.284-1.028-1.285.46-1.285 1.028.575 1.028 1.285 1.028M24 10.368c0-4.043-4.14-7.32-9.248-7.32-5.107 0-9.247 3.277-9.247 7.32 0 3.84 3.733 7.005 8.71 7.284l-.32 1.45c-.04.187.08.307.24.227l2.12-1.24c.147-.094.294-.187.427-.267.45.067.893.094 1.318.094 5.108 0 9.3-3.277 9.3-7.548M6.924 13.911c-.347.013-.693.026-1.026.026-.4 0-.8-.013-1.201-.053l-1.6.934c-.12.08-.226.014-.186-.147l.24-1.093c-2.88-1.147-4.742-3.32-4.742-5.787 0-3.52 3.841-6.374 8.562-6.374.2 0 .4 0 .613.013C4.204 2.857 1.39 5.391 1.39 8.35c0 2.507 2.134 4.72 5.374 5.507l.16.054z"/></svg>
+                    加微信进群 13519445134
+                </div>
             </div>
 
-            <div style="padding-top: 48px; min-height: 100vh;">
+            <div style="padding-top: 54px; min-height: 100vh;">
                 <div v-if="!isFilling" class="directory-container">
-                    <div class="directory-header" style="padding: 20px 0; border-bottom: 1px solid #eee; position: sticky; top: 48px; background: #ffffff; z-index: 1000;">
+                    <div class="directory-header" style="padding: 20px 0; border-bottom: 1px solid #eee; position: sticky; top: 54px; background: #ffffff; z-index: 1000;">
                         <h2>企业所得税年报模拟系统</h2>
                         <div class="action-group">
                             <button class="btn default-btn" @click="selectAll">全选</button>
@@ -55,7 +60,7 @@ const App = {
                 </div>
 
                 <div v-else class="workspace">
-                    <div class="sidebar" style="display: flex; flex-direction: column; height: calc(100vh - 48px); position: sticky; top: 48px; background: #4285f4; color: #ffffff;">
+                    <div class="sidebar" style="display: flex; flex-direction: column; height: calc(100vh - 54px); position: sticky; top: 54px; background: #4285f4; color: #ffffff;">
                         
                         <div class="sidebar-menu-list" style="flex: 1; overflow-y: auto; padding: 10px 0;">
                             <div v-for="item in selectedForms" :key="item.id" 
