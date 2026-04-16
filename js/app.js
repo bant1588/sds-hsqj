@@ -28,8 +28,29 @@ const App = {
     components: { TaxTableRenderer },
     template: `
         <div class="app-container">
-            <div class="top-banner" style="position: fixed; top: 0; left: 0; width: 100%; background-color: #fff3cd; color: #856404; text-align: center; padding: 12px 0; font-weight: bold; z-index: 2000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-bottom: 1px solid #ffeeba; font-size: 14px; height: 48px; box-sizing: border-box;">
-                💡 本系统属于模拟系统，仅用于学习交流，具体依税务实际征税为准! &nbsp; 加微信进群 13519445134
+            <div class="top-banner" style="position: fixed; top: 0; left: 0; width: 100%; background-color: #fff3cd; color: #856404; display: flex; align-items: center; justify-content: center; z-index: 2000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-bottom: 1px solid #ffeeba; height: 48px; box-sizing: border-box;">
+                
+                <div v-if="!isFilling" style="font-weight: bold; font-size: 14px;">
+                    💡 本系统属于模拟系统，仅用于学习交流，具体依税务实际征税为准! &nbsp; 加微信进群 13519445134
+                </div>
+
+                <div v-else style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 20px;">
+                    <div style="display: flex; gap: 8px;">
+                        <button @click="isFilling = false" class="banner-btn">← 返回目录</button>
+                        <button @click="handleExport" :disabled="isExporting" class="banner-btn success">
+                            {{ isExporting ? '导出中...' : '📥 导出到 Excel' }}
+                        </button>
+                        <button @click="handleReset" class="banner-btn danger">🗑️ 重置数据</button>
+                    </div>
+
+                    <div style="flex: 1; text-align: center; font-size: 14px;">
+                        当前填报：<strong style="color: #4285f4; font-size: 16px;">{{ currentMenu }}</strong>
+                    </div>
+
+                    <div style="font-size: 12px; opacity: 0.8; max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        💡 模拟交流，具体以实务为准 | 群: 13519445134
+                    </div>
+                </div>
             </div>
 
             <div style="padding-top: 48px; min-height: 100vh;">
@@ -65,27 +86,7 @@ const App = {
                         </div>
                     </div>
                     
-                    <div class="content" style="position: relative; flex: 1;">
-                        <div class="workspace-actions" style="position: sticky; top: 48px; z-index: 1000; background: #ffffff; padding: 0 20px; border-bottom: 2px solid #4a90e2; display: flex; justify-content: space-between; align-items: center; height: 60px; box-sizing: border-box; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <div style="color: #333; font-size: 15px;">
-                                当前填报表单：<strong style="color: #4a90e2; font-size: 16px;">{{ currentMenu }}</strong>
-                            </div>
-                            
-                            <div style="display: flex; gap: 12px;">
-                                <button class="back-btn" @click="isFilling = false" style="background: #ffffff; color: #4285f4; border: 1px solid #4285f4; border-radius: 4px; padding: 8px 16px; font-weight: bold; cursor: pointer; transition: all 0.2s;">
-                                    ← 返回目录
-                                </button>
-                                
-                                <button class="btn success-btn" @click="handleExport" :disabled="isExporting" style="background: #34a853; color: #ffffff; border: none; padding: 8px 16px; font-weight: bold; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer;">
-                                    {{ isExporting ? '导出中...' : '📥 导出到 Excel' }}
-                                </button>
-                                
-                                <button class="btn danger-btn" @click="handleReset" style="background: #ea4335; color: #ffffff; border: none; padding: 8px 16px; font-weight: bold; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer;">
-                                    🗑️ 重置填写数据
-                                </button>
-                            </div>
-                        </div>
-
+                    <div class="content" style="flex: 1; background: #f5f7f9;">
                         <div class="tax-table-container" style="padding: 20px;">
                             <TaxTableRenderer v-if="isCurrentFormConfig" :config="currentConfig" />
                             <component v-else :is="currentView" />
@@ -93,6 +94,30 @@ const App = {
                     </div>
                 </div>
             </div>
+            
+            <style>
+                .banner-btn {
+                    background: #ffffff;
+                    border: 1px solid #dcdfe6;
+                    border-radius: 4px;
+                    padding: 4px 12px;
+                    font-size: 13px;
+                    color: #856404;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+                }
+                .banner-btn:hover { background: #fffcf0; border-color: #856404; }
+                .banner-btn:active { background: #f8f4e0; }
+                .banner-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+                
+                .banner-btn.success { border-color: #67c23a; color: #348a08; }
+                .banner-btn.success:hover { background: #f0f9eb; }
+                
+                .banner-btn.danger { border-color: #f56c6c; color: #c82333; }
+                .banner-btn.danger:hover { background: #fef0f0; }
+            </style>
         </div>
     `,
     setup() {
@@ -134,9 +159,7 @@ const App = {
             { id: 'A109010', name: '企业所得税汇总纳税分支机构所得税分配表' }
         ])
         
-        // 定义必选的表单ID
         const mandatoryIds = ['A000000', 'A100000', 'A105000', 'A105050', 'A105080', 'A106000']
-        // 初始化时选中必选表单
         const selectedIds = ref([...mandatoryIds])
         
         const isFilling = ref(false)
@@ -150,7 +173,6 @@ const App = {
         const selectedForms = computed(() => fullCatalog.value.filter(i => selectedIds.value.includes(i.id)))
 
         const selectAll = () => { selectedIds.value = fullCatalog.value.map(i => i.id) }
-        // 取消全选时，恢复到必选项，而不是全部清空
         const deselectAll = () => { selectedIds.value = [...mandatoryIds] }
 
         const handleReset = () => {
