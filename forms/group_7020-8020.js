@@ -58,24 +58,20 @@ export const formBundle = {
                 {s:15, rows:[13,14]}, {s:18, rows:[16,17]}, {s:21, rows:[19,20]},
                 {s:24, rows:[22,23]}, {s:27, rows:[25,26]}, {s:30, rows:[28,29]}
             ];
-            // 计算 11 = 9 + 10 * 50%
             detailRows.forEach(r => {
                 if(t[`L${r}_C11`] !== undefined) {
                     t[`L${r}_C11`] = (t[`L${r}_C9`] || 0) + (t[`L${r}_C10`] || 0) * 0.5;
                 }
             });
-            // 汇总计算
             subtotalPairs.forEach(pair => {
                 for(let c=4; c<=11; c++) {
-                    if (pair.s === 12 && (c===9 || c===10)) continue; // 12行的 9, 10列手动输入
+                    if (pair.s === 12 && (c===9 || c===10)) continue; 
                     let sum = 0;
                     pair.rows.forEach(r => sum += (t[`L${r}_C${c}`] || 0));
                     t[`L${pair.s}_C${c}`] = sum;
                 }
             });
-            t.L12_C11 = (t.L12_C9 || 0) + (t.L12_C10 || 0) * 0.5; // 特殊处理技术转让的减免
-            
-            // 总计
+            t.L12_C11 = (t.L12_C9 || 0) + (t.L12_C10 || 0) * 0.5;
             for(let c=4; c<=11; c++) {
                 t[`L31_C${c}`] = (t[`L3_C${c}`]||0) + (t[`L6_C${c}`]||0) + (t[`L9_C${c}`]||0) + (t[`L12_C${c}`]||0) + (t[`L15_C${c}`]||0) + (t[`L18_C${c}`]||0) + (t[`L21_C${c}`]||0) + (t[`L24_C${c}`]||0) + (t[`L27_C${c}`]||0) + (t[`L30_C${c}`]||0);
             }
@@ -115,7 +111,7 @@ export const formBundle = {
             if (!db.A107030) return;
             const t = db.A107030;
             [2, 3].forEach(c => {
-                t[`L2_C${c}`] = 0.7; // 70% 抵扣率
+                t[`L2_C${c}`] = 0.7; 
                 t[`L3_C${c}`] = (t[`L1_C${c}`] || 0) * t[`L2_C${c}`];
                 t[`L1_C1`] = (t[`L1_C2`] || 0) + (t[`L1_C3`] || 0);
                 t[`L3_C1`] = (t[`L3_C2`] || 0) + (t[`L3_C3`] || 0);
@@ -134,26 +130,28 @@ export const formBundle = {
     },
 
     // ==========================================
-    // A107041 高新技术企业优惠情况及明细表
+    // A107041 高新技术企业优惠情况及明细表 (已修复格式)
     // ==========================================
     A107041: {
         schema: {
             id: 'A107041',
             title: '高新技术企业优惠情况及明细表 (A107041)',
-            columns: [{title:'行次', width:'8%'}, {title:'项 目', width:'52%'}, {title:'指标1', width:'10%'}, {title:'指标2', width:'10%'}, {title:'指标3', width:'10%'}, {title:'指标4(合计)', width:'10%'}],
+            // 规范为6列：行次(5%), 项目(55%), 本年度/金额(10%), 前一年度(10%), 前二年度(10%), 合计(10%)
+            columns: [{title:'行次', width:'5%'}, {title:'项 目', width:'55%'}, {title:'本年度/金额(1)', width:'10%'}, {title:'前一年度(2)', width:'10%'}, {title:'前二年度(3)', width:'10%'}, {title:'合计(4)', width:'10%'}],
             rows: [
-                { line: '1', text: '高新技术企业证书编号 / 取得时间', inputs: [{key:'L1_C1', type:'text', colspan:4}] },
-                { line: '2', text: '对企业主要产品发挥核心支持作用的技术所属范围', inputs: [{key:'L2_C1', type:'text'}, {key:'L2_C2', type:'text'}, {key:'L2_C3', type:'text'}, {key:'L2_C4', type:'text'}] },
-                { line: '4', text: '一、本年高新技术产品（服务）收入 (5+6)', isBold:true, inputs: [{key:'L4_C4', isReadonly:true}] },
-                { line: '5', text: '其中：产品（服务）收入', indent:1, inputs: [{key:'L5_C4'}] },
-                { line: '6', text: '技术性收入', indent:1, inputs: [{key:'L6_C4'}] },
-                { line: '7', text: '二、本年企业总收入 (8-9)', isBold:true, inputs: [{key:'L7_C4', isReadonly:true}] },
-                { line: '8', text: '其中：收入总额', indent:1, inputs: [{key:'L8_C4'}] },
-                { line: '9', text: '不征税收入', indent:1, inputs: [{key:'L9_C4'}] },
-                { line: '10', text: '三、高新收入占总收入比例 (4÷7)', isBold:true, inputs: [{key:'L10_C4', isReadonly:true}] },
-                { line: '11', text: '四、本年科技人员数', isBold:true, inputs: [{key:'L11_C4'}] },
-                { line: '12', text: '五、本年职工总数', isBold:true, inputs: [{key:'L12_C4'}] },
-                { line: '13', text: '六、科技人员占比 (11÷12)', isBold:true, inputs: [{key:'L13_C4', isReadonly:true}] },
+                // 确保每行都有 exactly 4 个 inputs 映射到后面的 4 列，不需要输入的列使用 isAsterisk 占位防错位
+                { line: '1', text: '高新技术企业证书编号 / 取得时间', inputs: [{key:'L1_C1', type:'text', placeholder:'编号'}, {isAsterisk:true}, {key:'L1_C3', type:'text', placeholder:'时间'}, {isAsterisk:true}] },
+                { line: '2', text: '对企业主要产品发挥核心支持作用的技术所属范围', inputs: [{key:'L2_C1', type:'text', placeholder:'一级'}, {key:'L2_C2', type:'text', placeholder:'二级'}, {key:'L2_C3', type:'text', placeholder:'三级'}, {isAsterisk:true}] },
+                { line: '4', text: '一、本年高新技术产品（服务）收入 (5+6)', isBold:true, inputs: [{key:'L4_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '5', text: '其中：产品（服务）收入', indent:1, inputs: [{key:'L5_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '6', text: '技术性收入', indent:1, inputs: [{key:'L6_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '7', text: '二、本年企业总收入 (8-9)', isBold:true, inputs: [{key:'L7_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '8', text: '其中：收入总额', indent:1, inputs: [{key:'L8_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '9', text: '不征税收入', indent:1, inputs: [{key:'L9_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '10', text: '三、高新收入占总收入比例 (4÷7)', isBold:true, inputs: [{key:'L10_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '11', text: '四、本年科技人员数', isBold:true, inputs: [{key:'L11_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '12', text: '五、本年职工总数', isBold:true, inputs: [{key:'L12_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '13', text: '六、科技人员占比 (11÷12)', isBold:true, inputs: [{key:'L13_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
                 { line: '14', text: '高新创发费用归集年度', isBold:true, inputs: [{key:'L14_C1', type:'text', value:'本年度', isReadonly:true}, {key:'L14_C2', type:'text', value:'前一年度', isReadonly:true}, {key:'L14_C3', type:'text', value:'前二年度', isReadonly:true}, {key:'L14_C4', type:'text', value:'合计', isReadonly:true}] },
                 { line: '15', text: '七、归集的高新研发费用金额 (16+25)', inputs: [{key:'L15_C1', isReadonly:true}, {key:'L15_C2', isReadonly:true}, {key:'L15_C3', isReadonly:true}, {key:'L15_C4', isReadonly:true}] },
                 { line: '16', text: '（一）内部研究开发投入 (17+..+22+24)', indent:1, inputs: [{key:'L16_C1', isReadonly:true}, {key:'L16_C2', isReadonly:true}, {key:'L16_C3', isReadonly:true}, {key:'L16_C4', isReadonly:true}] },
@@ -170,18 +168,18 @@ export const formBundle = {
                 { line: '27', text: '2. 境外的外部研发费', indent:2, inputs: [{key:'L27_C1'}, {key:'L27_C2'}, {key:'L27_C3'}, {key:'L27_C4', isReadonly:true}] },
                 { line: '28', text: '其中：可计入研发费用的境外的外部研发费', indent:3, inputs: [{key:'L28_C1'}, {key:'L28_C2'}, {key:'L28_C3'}, {key:'L28_C4', isReadonly:true}] },
                 { line: '29', text: '八、销售（营业）收入', isBold:true, inputs: [{key:'L29_C1'}, {key:'L29_C2'}, {key:'L29_C3'}, {key:'L29_C4', isReadonly:true}] },
-                { line: '30', text: '九、三年研发费用占销售收入的比例', isBold:true, inputs: [{key:'L30_C4', isReadonly:true}] },
-                { line: '31', text: '减免税额：高新技术企业', isBold:true, inputs: [{key:'L31_C4'}] },
-                { line: '32', text: '特区和浦东新区定期减免税额', isBold:true, inputs: [{key:'L32_C4'}] }
+                { line: '30', text: '九、三年研发费用占销售收入的比例', isBold:true, inputs: [{key:'L30_C1', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '31', text: '十、减免税额：高新技术企业', isBold:true, inputs: [{key:'L31_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '32', text: '十一、特区和浦东新区定期减免税额', isBold:true, inputs: [{key:'L32_C1'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] }
             ]
         },
         logic: (db) => {
             if (!db.A107041) return;
             const t = db.A107041;
-            t.L4_C4 = (t.L5_C4 || 0) + (t.L6_C4 || 0);
-            t.L7_C4 = (t.L8_C4 || 0) - (t.L9_C4 || 0);
-            t.L10_C4 = t.L7_C4 ? (t.L4_C4 / t.L7_C4).toFixed(4) : 0;
-            t.L13_C4 = t.L12_C4 ? (t.L11_C4 / t.L12_C4).toFixed(4) : 0;
+            t.L4_C1 = (t.L5_C1 || 0) + (t.L6_C1 || 0);
+            t.L7_C1 = (t.L8_C1 || 0) - (t.L9_C1 || 0);
+            t.L10_C1 = t.L7_C1 ? (t.L4_C1 / t.L7_C1).toFixed(4) : 0;
+            t.L13_C1 = t.L12_C1 ? (t.L11_C1 / t.L12_C1).toFixed(4) : 0;
 
             for (let c = 1; c <= 3; c++) {
                 t[`L16_C${c}`] = (t[`L17_C${c}`]||0) + (t[`L18_C${c}`]||0) + (t[`L19_C${c}`]||0) + (t[`L20_C${c}`]||0) + (t[`L21_C${c}`]||0) + (t[`L22_C${c}`]||0) + (t[`L24_C${c}`]||0);
@@ -193,7 +191,7 @@ export const formBundle = {
                 if (r===23) continue;
                 t[`L${r}_C4`] = (t[`L${r}_C1`] || 0) + (t[`L${r}_C2`] || 0) + (t[`L${r}_C3`] || 0);
             }
-            t.L30_C4 = t.L29_C4 ? (t.L15_C4 / t.L29_C4).toFixed(4) : 0;
+            t.L30_C1 = t.L29_C4 ? (t.L15_C4 / t.L29_C4).toFixed(4) : 0;
         }
     },
 
@@ -226,35 +224,36 @@ export const formBundle = {
         },
         logic: (db) => {
             if (!db.A107042) return;
-            // 简单数据收集，无强计算逻辑
         }
     },
 
     // ==========================================
-    // A107050 税额抵免优惠明细表
+    // A107050 税额抵免优惠明细表 (已修复格式)
     // ==========================================
     A107050: {
         schema: {
             id: 'A107050',
             title: '税额抵免优惠明细表 (A107050)',
+            // 规范为 9 列。2个文本列，7个数据输入列
             columns: [
-                {title:'行次', width:'4%'}, {title:'类别', width:'6%'}, {title:'年度(1)', width:'10%'},
-                {title:'当年抵免前应纳税额(2)', width:'14%'}, {title:'当年允许抵免的投资额(3)', width:'14%'}, 
-                {title:'当年实际可抵免税额(4)', width:'14%'}, {title:'以前年度已抵免小计(5)', width:'13%'}, 
-                {title:'本年实际抵免税额(6)', width:'13%'}, {title:'结转以后可抵免税额(7)', width:'12%'}
+                {title:'行次', width:'4%'}, {title:'类别/项目', width:'12%'}, {title:'年度(1)', width:'12%'},
+                {title:'抵免前应纳税额(2)', width:'12%'}, {title:'允许抵免投资额(3)', width:'12%'}, 
+                {title:'实际可抵免额(4)', width:'12%'}, {title:'以前已抵免小计(5)', width:'12%'}, 
+                {title:'本年实际抵免(6)', width:'12%'}, {title:'可结转抵免额(7)', width:'12%'}
             ],
             rows: [
-                { line: '1', text: '抵免情况', text2: '前五年度', inputs: [{key:'L1_C2'}, {key:'L1_C3'}, {key:'L1_C4'}, {key:'L1_C5'}, {key:'L1_C6'}, {isAsterisk:true}] },
-                { line: '2', text: '', text2: '前四年度', inputs: [{key:'L2_C2'}, {key:'L2_C3'}, {key:'L2_C4'}, {key:'L2_C5'}, {key:'L2_C6'}, {key:'L2_C7'}] },
-                { line: '3', text: '', text2: '前三年度', inputs: [{key:'L3_C2'}, {key:'L3_C3'}, {key:'L3_C4'}, {key:'L3_C5'}, {key:'L3_C6'}, {key:'L3_C7'}] },
-                { line: '4', text: '', text2: '前二年度', inputs: [{key:'L4_C2'}, {key:'L4_C3'}, {key:'L4_C4'}, {key:'L4_C5'}, {key:'L4_C6'}, {key:'L4_C7'}] },
-                { line: '5', text: '', text2: '前一年度', inputs: [{key:'L5_C2'}, {key:'L5_C3'}, {key:'L5_C4'}, {key:'L5_C5'}, {key:'L5_C6'}, {key:'L5_C7'}] },
-                { line: '6', text: '', text2: '本年度', inputs: [{key:'L6_C2'}, {key:'L6_C3'}, {key:'L6_C4'}, {isAsterisk:true}, {key:'L6_C6'}, {key:'L6_C7'}] },
-                { line: '7', text: '', text2: '本年实际抵免合计', isBold:true, inputs: [{key:'L7_C2', isReadonly:true}, {key:'L7_C3', isReadonly:true}, {key:'L7_C4', isReadonly:true}, {key:'L7_C5', isReadonly:true}, {key:'L7_C6', isReadonly:true}, {isAsterisk:true}] },
-                { line: '8', text: '', text2: '可结转以后年度抵免合计', isBold:true, inputs: [{key:'L8_C2', isReadonly:true}, {key:'L8_C3', isReadonly:true}, {key:'L8_C4', isReadonly:true}, {key:'L8_C5', isReadonly:true}, {key:'L8_C6', isReadonly:true}, {key:'L8_C7', isReadonly:true}] },
-                { line: '9', text: '本年投资', text2: '投资类型', inputs: [{key:'L9_C2', type:'text', value:'投资额', isReadonly:true}, {key:'L9_C3', type:'text', value:'抵免比例', isReadonly:true}, {key:'L9_C4', type:'text', value:'可抵免税额', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
-                { line: '9.1', text: '', text2: '项目明细1', inputs: [{key:'L9_1_C2'}, {key:'L9_1_C3'}, {key:'L9_1_C4'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
-                { line: '9.2', text: '', text2: '项目明细2', inputs: [{key:'L9_2_C2'}, {key:'L9_2_C3'}, {key:'L9_2_C4'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] }
+                // 确保 inputs 数组恒定为 7 个元素，对应列(1)到(7)
+                { line: '1', text: '抵免情况 - 前五年度', inputs: [{key:'L1_C1', type:'text'}, {key:'L1_C2'}, {key:'L1_C3'}, {key:'L1_C4'}, {key:'L1_C5'}, {key:'L1_C6'}, {isAsterisk:true}] },
+                { line: '2', text: '抵免情况 - 前四年度', inputs: [{key:'L2_C1', type:'text'}, {key:'L2_C2'}, {key:'L2_C3'}, {key:'L2_C4'}, {key:'L2_C5'}, {key:'L2_C6'}, {key:'L2_C7'}] },
+                { line: '3', text: '抵免情况 - 前三年度', inputs: [{key:'L3_C1', type:'text'}, {key:'L3_C2'}, {key:'L3_C3'}, {key:'L3_C4'}, {key:'L3_C5'}, {key:'L3_C6'}, {key:'L3_C7'}] },
+                { line: '4', text: '抵免情况 - 前二年度', inputs: [{key:'L4_C1', type:'text'}, {key:'L4_C2'}, {key:'L4_C3'}, {key:'L4_C4'}, {key:'L4_C5'}, {key:'L4_C6'}, {key:'L4_C7'}] },
+                { line: '5', text: '抵免情况 - 前一年度', inputs: [{key:'L5_C1', type:'text'}, {key:'L5_C2'}, {key:'L5_C3'}, {key:'L5_C4'}, {key:'L5_C5'}, {key:'L5_C6'}, {key:'L5_C7'}] },
+                { line: '6', text: '抵免情况 - 本年度', inputs: [{key:'L6_C1', type:'text'}, {key:'L6_C2'}, {key:'L6_C3'}, {key:'L6_C4'}, {isAsterisk:true}, {key:'L6_C6'}, {key:'L6_C7'}] },
+                { line: '7', text: '本年实际抵免合计', isBold:true, inputs: [{isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}, {key:'L7_C6', isReadonly:true}, {isAsterisk:true}] },
+                { line: '8', text: '可结转以后年度合计', isBold:true, inputs: [{isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}, {key:'L8_C7', isReadonly:true}] },
+                { line: '9', text: '本年允许抵免设备 - 投资类型', inputs: [{key:'L9_C1', type:'text', value:'投资类型', isReadonly:true}, {key:'L9_C2', type:'text', value:'投资额', isReadonly:true}, {key:'L9_C3', type:'text', value:'抵免比例', isReadonly:true}, {key:'L9_C4', type:'text', value:'可抵免税额', isReadonly:true}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '9.1', text: '项目明细1', indent:1, inputs: [{key:'L9_1_C1', type:'text'}, {key:'L9_1_C2'}, {key:'L9_1_C3'}, {key:'L9_1_C4'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] },
+                { line: '9.2', text: '项目明细2', indent:1, inputs: [{key:'L9_2_C1', type:'text'}, {key:'L9_2_C2'}, {key:'L9_2_C3'}, {key:'L9_2_C4'}, {isAsterisk:true}, {isAsterisk:true}, {isAsterisk:true}] }
             ]
         },
         logic: (db) => {
@@ -263,7 +262,7 @@ export const formBundle = {
             let sum6 = 0; let sum7 = 0;
             for(let r=1; r<=6; r++) {
                 sum6 += (t[`L${r}_C6`] || 0);
-                if (r > 1) sum7 += (t[`L${r}_C7`] || 0);
+                if (r > 1) sum7 += (t[`L${r}_C7`] || 0); // 首行无第7列
             }
             t.L7_C6 = sum6;
             t.L8_C7 = sum7;
@@ -271,22 +270,24 @@ export const formBundle = {
     },
 
     // ==========================================
-    // A108000 境外所得税收抵免明细表 (超级矩阵)
+    // A108000 境外所得税收抵免明细表 (超级矩阵 - 已修复格式)
     // ==========================================
     A108000: {
         schema: {
             id: 'A108000',
             title: '境外所得税收抵免明细表 (A108000)',
+            // 规范列总数：行次 + 19列 = 20列
             columns: [
                 {title:'行次', width:'3%'}, {title:'国家(1)', width:'5%'},
                 {title:'税前所得(2)', width:'5%'}, {title:'调整后所得(3)', width:'5%'}, {title:'弥补亏损(4)', width:'5%'},
                 {title:'应纳税所得(5=3-4)', width:'5%'}, {title:'抵减境内亏损(6)', width:'5%'}, {title:'抵减后所得(7=5-6)', width:'5%'},
                 {title:'税率(8)', width:'4%'}, {title:'应纳税额(9=7×8)', width:'5%'}, {title:'可抵免税额(10)', width:'5%'},
                 {title:'抵免限额(11)', width:'5%'}, {title:'本年可抵免(12)', width:'5%'}, {title:'未超限额余额(13=11-12)', width:'5%'},
-                {title:'可抵免以前年度(14)', width:'5%'}, {title:'简易低于12.5%(15)', width:'5%'}, {title:'简易12.5%(16)', width:'5%'},
-                {title:'简易25%(17)', width:'5%'}, {title:'简易小计(18=15+16+17)', width:'5%'}, {title:'抵免合计(19=12+14+18)', width:'5%'}
+                {title:'可抵前年度(14)', width:'5%'}, {title:'简易<12.5%(15)', width:'5%'}, {title:'简易12.5%(16)', width:'5%'},
+                {title:'简易25%(17)', width:'5%'}, {title:'简易小计(18=15..17)', width:'5%'}, {title:'抵免合计(19=12+14+18)', width:'5%'}
             ],
             rows: [
+                // 确保 inputs 数组恒定为 19 个元素
                 { line: '1', text: '', inputs: [{key:'L1_C1', type:'text'}, {key:'L1_C2'}, {key:'L1_C3'}, {key:'L1_C4'}, {key:'L1_C5', isReadonly:true}, {key:'L1_C6'}, {key:'L1_C7', isReadonly:true}, {key:'L1_C8', value:0.25}, {key:'L1_C9', isReadonly:true}, {key:'L1_C10'}, {key:'L1_C11'}, {key:'L1_C12'}, {key:'L1_C13', isReadonly:true}, {key:'L1_C14'}, {key:'L1_C15'}, {key:'L1_C16'}, {key:'L1_C17'}, {key:'L1_C18', isReadonly:true}, {key:'L1_C19', isReadonly:true}] },
                 { line: '2', text: '', inputs: [{key:'L2_C1', type:'text'}, {key:'L2_C2'}, {key:'L2_C3'}, {key:'L2_C4'}, {key:'L2_C5', isReadonly:true}, {key:'L2_C6'}, {key:'L2_C7', isReadonly:true}, {key:'L2_C8', value:0.25}, {key:'L2_C9', isReadonly:true}, {key:'L2_C10'}, {key:'L2_C11'}, {key:'L2_C12'}, {key:'L2_C13', isReadonly:true}, {key:'L2_C14'}, {key:'L2_C15'}, {key:'L2_C16'}, {key:'L2_C17'}, {key:'L2_C18', isReadonly:true}, {key:'L2_C19', isReadonly:true}] },
                 { line: '3', text: '', inputs: [{key:'L3_C1', type:'text'}, {key:'L3_C2'}, {key:'L3_C3'}, {key:'L3_C4'}, {key:'L3_C5', isReadonly:true}, {key:'L3_C6'}, {key:'L3_C7', isReadonly:true}, {key:'L3_C8', value:0.25}, {key:'L3_C9', isReadonly:true}, {key:'L3_C10'}, {key:'L3_C11'}, {key:'L3_C12'}, {key:'L3_C13', isReadonly:true}, {key:'L3_C14'}, {key:'L3_C15'}, {key:'L3_C16'}, {key:'L3_C17'}, {key:'L3_C18', isReadonly:true}, {key:'L3_C19', isReadonly:true}] },
