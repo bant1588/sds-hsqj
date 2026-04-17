@@ -21,22 +21,20 @@ const FormattedNumberInput = {
         const dynamicMinWidth = computed(() => {
             let strVal = '';
             if (isFocused.value) {
-                // 修改：不再对 0 进行特殊处理，保留原始数字长度支撑宽度
                 strVal = (props.modelValue === null || props.modelValue === undefined) ? '' : String(props.modelValue);
             } else {
                 strVal = formatNumber(props.modelValue);
             }
             const len = strVal ? strVal.length : 0;
-            // 基础预留 100px，超过 12 个字符后随着输入逐渐变宽
             return len > 12 ? `${100 + (len - 12) * 8}px` : '100px';
         });
 
         const onFocus = (e) => {
             if (props.isReadonly) return;
             isFocused.value = true;
-            // 修改：聚焦时还原为纯数字，不再将 0 自动清空，也不再自动全选
+            // 聚焦时仅还原为纯数字，保留原数字，不触发清空，也不自动全选
+            // 这样鼠标点在哪里，光标就在哪里，用户必须按删除键才能删除
             e.target.value = (props.modelValue === null || props.modelValue === undefined) ? '' : props.modelValue;
-            // 移除 setTimeout(() => e.target.select(), 0); 避免文本被全选导致一输入就被覆盖
         };
 
         const onBlur = (e) => {
