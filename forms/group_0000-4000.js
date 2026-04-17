@@ -1,7 +1,7 @@
 // forms/group_0000-4000.js
 
 // 用于记录A100000主表默认计算结果的缓存，实现“默认公式计算也可以手动填写”
-let cache_A100 = { L1: 0, L2: 0, L4: 0, L5: 0, L7: 0, L16: 0, L17: 0, L31: 0, L34: 0, L35: 0 };
+let cache_A100 = { L1: 0, L2: 0, L4: 0, L5: 0, L7: 0, L16: 0, L17: 0, L20: 0, L21: 0, L26: 0, L31: 0, L34: 0, L35: 0 };
 
 export const formBundle = {
     // ==========================================
@@ -216,6 +216,11 @@ export const formBundle = {
             const calcL16 = (db.A101010?.L16 || 0) + (db.A101020?.L35 || 0);
             const calcL17 = (db.A102010?.L16 || 0) + (db.A102020?.L33 || 0);
             
+            // 关联 A105000 和 A106000 数据
+            const calcL20 = db.A105000?.L46_C3 || 0;
+            const calcL21 = db.A105000?.L46_C4 || 0;
+            const calcL26 = db.A106000?.L11_C10 || 0;
+
             const calcL31 = (t.L31_1 || 0) + (t.L31_2 || 0);
             
             // 关联 A108000 数据（如果系统已初始化了该表）
@@ -232,6 +237,11 @@ export const formBundle = {
             
             if (t.L16 === cache_A100.L16 || t.L16 === 0 || t.L16 === '') t.L16 = calcL16;
             if (t.L17 === cache_A100.L17 || t.L17 === 0 || t.L17 === '') t.L17 = calcL17;
+            
+            if (t.L20 === cache_A100.L20 || t.L20 === 0 || t.L20 === '') t.L20 = calcL20;
+            if (t.L21 === cache_A100.L21 || t.L21 === 0 || t.L21 === '') t.L21 = calcL21;
+            if (t.L26 === cache_A100.L26 || t.L26 === 0 || t.L26 === '') t.L26 = calcL26;
+
             if (t.L31 === cache_A100.L31 || t.L31 === 0 || t.L31 === '') t.L31 = calcL31;
             if (t.L34 === cache_A100.L34 || t.L34 === 0 || t.L34 === '') t.L34 = calcL34;
             if (t.L35 === cache_A100.L35 || t.L35 === 0 || t.L35 === '') t.L35 = calcL35;
@@ -244,6 +254,9 @@ export const formBundle = {
             cache_A100.L7 = calcL7;
             cache_A100.L16 = calcL16;
             cache_A100.L17 = calcL17;
+            cache_A100.L20 = calcL20;
+            cache_A100.L21 = calcL21;
+            cache_A100.L26 = calcL26;
             cache_A100.L31 = calcL31;
             cache_A100.L34 = calcL34;
             cache_A100.L35 = calcL35;
@@ -257,7 +270,11 @@ export const formBundle = {
             t.L24 = t.L18 - (t.L19 || 0) + (t.L20 || 0) - (t.L21 || 0) - (t.L22 || 0) + (t.L23 || 0);
             t.L28 = t.L24 - (t.L25 || 0) - (t.L26 || 0) - (t.L27 || 0);
             t.L29 = 0.25; 
-            t.L30 = t.L28 * t.L29;
+            
+            // 30行限制：小于0时显示0
+            const calcL30_temp = t.L28 * t.L29;
+            t.L30 = calcL30_temp < 0 ? 0 : calcL30_temp;
+
             t.L33 = t.L30 - t.L31 - (t.L32 || 0);
             
             // 实际应纳税及补退税额计算
