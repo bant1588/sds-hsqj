@@ -1,5 +1,5 @@
 // components/TaxTableRenderer.js
-import { ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+import { ref, computed } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
 import { db } from '../js/engine.js'
 
 // 自定义数字格式化输入框组件
@@ -16,6 +16,19 @@ const FormattedNumberInput = {
             if (isNaN(num)) return val;
             return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         };
+
+        // 动态计算输入框的最小宽度：当数字长度过长时，动态撑开宽度作为兜底机制
+        const dynamicMinWidth = computed(() => {
+            let strVal = '';
+            if (isFocused.value) {
+                strVal = (props.modelValue === 0 || props.modelValue === null || props.modelValue === undefined) ? '' : String(props.modelValue);
+            } else {
+                strVal = formatNumber(props.modelValue);
+            }
+            const len = strVal ? strVal.length : 0;
+            // 基础预留 100px，超过 12 个字符后随着输入逐渐变宽
+            return len > 12 ? `${100 + (len - 12) * 8}px` : '100px';
+        });
 
         const onFocus = (e) => {
             if (props.isReadonly) return;
@@ -39,13 +52,14 @@ const FormattedNumberInput = {
             emit('update:modelValue', finalNum);
         };
 
-        return { isFocused, formatNumber, onFocus, onBlur };
+        return { isFocused, formatNumber, onFocus, onBlur, dynamicMinWidth };
     },
     template: `
         <input type="text"
                class="tax-input"
                :class="{'text-center': alignCenter}"
                :readonly="isReadonly"
+               :style="{ minWidth: dynamicMinWidth }"
                :value="isFocused ? undefined : formatNumber(modelValue)"
                @focus="onFocus"
                @blur="onBlur"
