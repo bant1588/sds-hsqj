@@ -31,7 +31,7 @@ const App = {
             <div style="position: fixed; top: 0; left: 0; width: 100%; background-color: #FDF6EC; display: flex; align-items: center; justify-content: center; z-index: 2000; border-bottom: 2px solid #E6A23C; height: 48px; box-sizing: border-box; gap: 15px; color: #5C4E3A; font-family: sans-serif;">
                 <div style="display: flex; align-items: center; gap: 8px; font-size: 15px;">
                     <span style="font-size: 18px;">💡</span>
-                    <span style="letter-spacing: 0.5px;">本系统属于模拟系统，仅用于学习交流，具体依税务实际征税为准！</span>
+                    <span style="letter-spacing: 0.5px; font-weight: bold;">本系统属于模拟系统，仅用于学习交流，具体依税务实际征税为准！</span>
                 </div>
                 <div style="background-color: #07C160; color: white; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px; cursor: default; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
                     <span style="font-size: 16px;">💬</span>
@@ -120,9 +120,9 @@ const App = {
                 .btn-export:hover { background-color: #85ce61; border-color: #85ce61; }
                 .btn-export:disabled { background-color: #b3e19d; border-color: #b3e19d; cursor: not-allowed; box-shadow: none; }
                 
-                /* 红底 - 重置填写数据 */
-                .btn-reset { background-color: #F56C6C; color: white; border-color: #F56C6C; box-shadow: 0 1px 2px rgba(245,108,108,0.2); }
-                .btn-reset:hover { background-color: #f78989; border-color: #f78989; }
+                /* 橙底 - 重置填写数据 */
+                .btn-reset { background-color: #E6A23C; color: white; border-color: #E6A23C; box-shadow: 0 1px 2px rgba(230,162,60,0.2); }
+                .btn-reset:hover { background-color: #ebb563; border-color: #ebb563; }
             </style>
         </div>
     `,
