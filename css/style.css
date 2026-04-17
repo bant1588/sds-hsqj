@@ -84,12 +84,10 @@ body {
 .workspace {
     display: flex;
     width: 100%;
-    /* 修复：减去顶部 Banner 的 48px，避免整体高度超出屏幕导致底部内容被裁剪 */
     height: calc(100vh - 48px);
 }
 
 .sidebar {
-    width: 280px;
     background-color: #001529;
     color: #a6adb4;
     overflow-y: auto;
@@ -116,21 +114,21 @@ body {
 .back-btn:hover { background: #177ddc; color: #fff; }
 
 .menu-item {
-    padding: 15px 20px;
     cursor: pointer;
     transition: all 0.3s;
-    border-bottom: 1px solid #0a2035;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
     line-height: 1.4;
+    white-space: nowrap; /* 侧边栏折叠时防换行 */
+    overflow: hidden;
 }
 
-.menu-item:hover { color: #fff; background: #002140; }
-.menu-item.active { background-color: #1890ff; color: #fff; border-left: 4px solid #fff; }
+.menu-item:hover { color: #fff; background: rgba(0,0,0,0.15) !important; }
+.menu-item.active { background-color: rgba(0,0,0,0.3) !important; color: #fff; border-left: 4px solid #fff; }
 
 .content {
     flex: 1;
     padding: 24px;
     overflow-y: auto;
-    /* 修复：确保 padding 包含在元素高度内，防止底部内容溢出 */
     box-sizing: border-box; 
 }
 
@@ -160,10 +158,11 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    font-size: 13px; /* 字体稍微缩小便于显示完整 */
+    font-size: 13px; 
+    table-layout: auto; /* 修改：由固定改为 auto，使得列可以根据内容宽度自适应伸长 */
 }
 .tax-table th, .tax-table td {
-    border: 1px solid #333; /* 增强边框清晰度贴合原表 */
+    border: 1px solid #333; 
     padding: 8px 12px;
     text-align: center;
     vertical-align: middle;
@@ -171,17 +170,19 @@ body {
 .tax-table th { background-color: #fafafa; font-weight: bold; color: #333; }
 .tax-input {
     width: 100%;
+    min-width: 100px; /* 修改：增加保底最小宽度 */
     padding: 6px;
     border: 1px solid #d9d9d9;
     border-radius: 2px;
     text-align: right;
     box-sizing: border-box;
     font-family: inherit;
+    field-sizing: content; /* 修改核心：现代浏览器属性，允许输入框根据内容长度自动撑开变宽 */
 }
 .tax-input:focus { border-color: #1890ff; outline: none; box-shadow: 0 0 0 2px rgba(24,144,255,0.2); }
 .tax-input[readonly] { background-color: #f5f5f5; cursor: not-allowed; color: #666; border-color: #e8e8e8;}
 
-/* ---------------- 新增辅助排版样式 ---------------- */
+/* ---------------- 辅助排版样式 ---------------- */
 .text-left { text-align: left !important; }
 .text-center { text-align: center !important; }
 .font-bold { font-weight: bold !important; }
