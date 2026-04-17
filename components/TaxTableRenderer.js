@@ -21,7 +21,8 @@ const FormattedNumberInput = {
         const dynamicMinWidth = computed(() => {
             let strVal = '';
             if (isFocused.value) {
-                strVal = (props.modelValue === 0 || props.modelValue === null || props.modelValue === undefined) ? '' : String(props.modelValue);
+                // 修改：不再对 0 进行特殊处理，保留原始数字长度支撑宽度
+                strVal = (props.modelValue === null || props.modelValue === undefined) ? '' : String(props.modelValue);
             } else {
                 strVal = formatNumber(props.modelValue);
             }
@@ -33,9 +34,9 @@ const FormattedNumberInput = {
         const onFocus = (e) => {
             if (props.isReadonly) return;
             isFocused.value = true;
-            // 聚焦时还原为纯数字，如果是0则直接清空方便用户输入
-            e.target.value = props.modelValue === 0 ? '' : props.modelValue;
-            setTimeout(() => e.target.select(), 0); // 聚焦时全选文本
+            // 修改：聚焦时还原为纯数字，不再将 0 自动清空，也不再自动全选
+            e.target.value = (props.modelValue === null || props.modelValue === undefined) ? '' : props.modelValue;
+            // 移除 setTimeout(() => e.target.select(), 0); 避免文本被全选导致一输入就被覆盖
         };
 
         const onBlur = (e) => {
