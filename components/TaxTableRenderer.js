@@ -8,6 +8,7 @@ const FormattedNumberInput = {
     emits: ['update:modelValue'],
     setup(props, { emit }) {
         const isFocused = ref(false);
+        const localValue = ref('');
 
         // 格式化为千分位 + 两位小数
         const formatNumber = (val) => {
@@ -21,7 +22,8 @@ const FormattedNumberInput = {
         const dynamicMinWidth = computed(() => {
             let strVal = '';
             if (isFocused.value) {
-                strVal = (props.modelValue === null || props.modelValue === undefined) ? '' : String(props.modelValue);
+                // 聚焦时使用用户当前正在输入的原始文本计算宽度
+                strVal = localValue.value;
             } else {
                 strVal = formatNumber(props.modelValue);
             }
@@ -32,16 +34,21 @@ const FormattedNumberInput = {
         const onFocus = (e) => {
             if (props.isReadonly) return;
             isFocused.value = true;
-            // 聚焦时仅还原为纯数字，保留原数字，不触发清空，也不自动全选
+            // 聚焦时仅还原为纯数字并存入局部变量，保留原数字
             // 这样鼠标点在哪里，光标就在哪里，用户必须按删除键才能删除
-            e.target.value = (props.modelValue === null || props.modelValue === undefined) ? '' : props.modelValue;
+            localValue.value = (props.modelValue === null || props.modelValue === undefined) ? '' : String(props.modelValue);
+        };
+
+        const onInput = (e) => {
+            // 实时同步用户输入，防止由于页面其他数据变动引发重渲染导致输入状态丢失
+            localValue.value = e.target.value;
         };
 
         const onBlur = (e) => {
             if (props.isReadonly) return;
             isFocused.value = false;
             // 去除逗号提取真实数字
-            let val = e.target.value.replace(/,/g, '');
+            let val = localValue.value.replace(/,/g, '');
             let finalNum = 0;
             if (val !== '') {
                 const num = Number(val);
@@ -51,7 +58,7 @@ const FormattedNumberInput = {
             emit('update:modelValue', finalNum);
         };
 
-        return { isFocused, formatNumber, onFocus, onBlur, dynamicMinWidth };
+        return { isFocused, localValue, formatNumber, onFocus, onBlur, onInput, dynamicMinWidth };
     },
     template: `
         <input type="text"
@@ -59,9 +66,10 @@ const FormattedNumberInput = {
                :class="{'text-center': alignCenter}"
                :readonly="isReadonly"
                :style="{ minWidth: dynamicMinWidth }"
-               :value="isFocused ? undefined : formatNumber(modelValue)"
+               :value="isFocused ? localValue : formatNumber(modelValue)"
                @focus="onFocus"
                @blur="onBlur"
+               @input="onInput"
         />
     `
 };
